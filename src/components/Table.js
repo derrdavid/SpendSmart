@@ -42,6 +42,25 @@ function Table() {
             .catch(error => console.error('Fehler beim Hinzufügen einer Zeile:', error));
     }
 
+    const updateRow = (id, dataToUpdate) => {
+        const jsonString = JSON.stringify(dataToUpdate);
+        console.log(jsonString)
+        fetch(url + id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonString
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Fehler beim Aktualisieren einer Zeile');
+                }
+                fetchItems();
+            })
+            .catch(error => console.error('Fehler beim Aktualisieren einer Zeile:', error));
+    }
+
     const deleteRow = (id) => {
         fetch(url + id, {
             method: 'DELETE'
@@ -55,21 +74,9 @@ function Table() {
             .catch(error => console.error('Fehler beim Löschen einer Zeile:', error));
     }
 
-    const handleInputChange = (index, fieldName, value) => {
-        setItems(prevItems => {
-            const updatedItems = [...prevItems];
-            updatedItems[index] = {
-                ...updatedItems[index],
-                [fieldName]: value
-            };
-            return updatedItems;
-        });
-    };
-
-    const testParent = () => {
-        console.log("parent");
+    const swapRows = (id1, id2) => {
+        
     }
-
 
     useEffect(() => {
         fetchItems();
@@ -83,6 +90,7 @@ function Table() {
             <table>
                 <thead>
                     <tr>
+                    <td><h2></h2></td>
                         <td><h2></h2></td>
                         <td><h2></h2></td>
                         <td><h2>name</h2></td>
@@ -92,13 +100,12 @@ function Table() {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map((item, index) => (
+                    {items.map((item) => (
                         <TableRow
-                            key={index}
-                            index={index}
+                            key={item._id}
                             rowData={item}
-                            onInputChange={handleInputChange}
                             remove={deleteRow}
+                            update={updateRow}
                         />
                     ))}
                 </tbody>

@@ -1,0 +1,9 @@
+body {
+  background-color: black;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  margin: 0;
+  font-family: monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

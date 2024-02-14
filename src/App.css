@@ -1,0 +1,36 @@
+.App {
+  display: flex;
+  flex-direction: column; /* Anordnung der Elemente in einer Spalte */
+  align-items: center; /* Zentrieren der Elemente horizontal */
+}
+
+.App-header {
+  z-index: 5;
+  background-color: #282c34;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  color: white;
+  display: flex;
+}
+
+.App-body {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #393d45;
+  margin: 3em;
+}
+
+.app-logo {
+  width: 100%;
+  display: flex;
+  margin: 1em;
+}
+
+.user-icon {
+  width: 100%;
+  display: flex;
+  margin: 1em;
+}

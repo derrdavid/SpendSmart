@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Table.css';
-import TableRow from './TableRow';
+import { DataGrid } from '@mui/x-data-grid';
 
 function Table() {
     const [items, setItems] = useState([]);
@@ -42,27 +41,25 @@ function Table() {
             .catch(error => console.error('Fehler beim Hinzufügen einer Zeile:', error));
     }
 
-    const updateRow = (id, dataToUpdate) => {
-        const jsonString = JSON.stringify(dataToUpdate);
-        console.log(jsonString)
-        fetch(url + id, {
+    const updateRow = (row) => {
+        return fetch(`${url}${row._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: jsonString
+            body: JSON.stringify(row)
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Fehler beim Aktualisieren einer Zeile');
+                    throw new Error('Fehler beim Aktualisieren der Zeile');
                 }
                 fetchItems();
             })
-            .catch(error => console.error('Fehler beim Aktualisieren einer Zeile:', error));
+            .catch(error => console.error('Fehler beim Aktualisieren der Zeile:', error));
     }
 
     const deleteRow = (id) => {
-        fetch(url + id, {
+        return fetch(url + id, {
             method: 'DELETE'
         })
             .then(response => {
@@ -75,57 +72,38 @@ function Table() {
     }
 
     const swapRows = (id1, id2) => {
-        
+
     }
 
     useEffect(() => {
         fetchItems();
     }, [])
 
+
     return (
-        <div className="Table">
-            <div className="Month-Selection">
-                <h1>select month</h1>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                    <td><h2></h2></td>
-                        <td><h2></h2></td>
-                        <td><h2></h2></td>
-                        <td><h2>name</h2></td>
-                        <td><h2>category</h2></td>
-                        <td><h2>price</h2></td>
-                        <td><h2></h2></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {items.map((item) => (
-                        <TableRow
-                            key={item._id}
-                            rowData={item}
-                            remove={deleteRow}
-                            update={updateRow}
-                        />
-                    ))}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={2}></td>
-                        <td colSpan={3}>
-                            <button onClick={addRow}>add</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>0</td>
-                        <td></td>
-                    </tr>
-                </tfoot>
-            </table>
+        <div>
+            <DataGrid
+                editMode='row'
+                getRowId={(row) => row._id}
+                rows={items}
+                columns={[
+                    { field: 'name', headerName: 'name', width: 200, editable: true },
+                    { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },
+                    { field: 'price', headerName: 'price', type: 'number', width: 100, editable: true },
+                ]}
+                initialState={{
+                    pagination: {
+                        paginationModel: { page: 0, pageSize: 5 },
+                    },
+                }}
+                pageSizeOptions={[5, 10]}
+                checkboxSelection
+                processRowUpdate={async (newRow) => {
+                    await updateRow(newRow);
+                    return newRow;
+                }}
+                onProcessRowUpdateError={(e) => { console.log(e) }}
+            />
         </div>
     );
 }

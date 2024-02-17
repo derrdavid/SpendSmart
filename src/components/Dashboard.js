@@ -1,11 +1,11 @@
 import React from 'react';
-import { Drawer, List, ListItemText, Divider, Typography, ListItemButton, ListItemIcon } from '@mui/material';
+import { Drawer, List, ListItemText, Divider, Typography, ListItemButton, ListItemIcon, Container } from '@mui/material';
 import { BarChartRounded, CreditCard, DashboardRounded, InfoRounded, ReceiptRounded } from '@mui/icons-material';
 import Table from '../pages/MonthlyExpenses';
 
 const Dashboard = () => {
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', height: '90vh' }}>
             {/* Linke Leiste */}
             <Drawer
                 PaperProps={{
@@ -59,10 +59,17 @@ const Dashboard = () => {
                 </List>
                 <Divider />
             </Drawer>
-
-            <div style={{ flexGrow: 1 }}>
+            <Container sx={{
+                margin: 5,
+                padding: 7,
+                borderRadius: 3,
+                backgroundColor: '#2C3333',
+                width: '100vh',
+                display: 'flex',
+                justifyContent: 'center'
+            }}>
                 <Table></Table>
-            </div>
+            </Container>
         </div>
     );
 }

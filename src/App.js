@@ -2,6 +2,9 @@ import Dashboard from './components/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material';
 
 const theme = createTheme({
+  palette:{
+    mode: 'dark'
+  },
   components: {
     MuiListItemButton: {
       styleOverrides: {
@@ -28,7 +31,7 @@ const theme = createTheme({
 function App() {
   return(
     <ThemeProvider theme={theme}>
-      <Dashboard></Dashboard>)
+      <Dashboard></Dashboard>
     </ThemeProvider>
   );
 }

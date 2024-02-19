@@ -17,7 +17,8 @@ export default function useExpenses() {
     }
 
     const fetchItemsByDate = (date) => {
-        return fetch(`${url}${date.$y}/${date.$M + 1}`)
+        const parsedDate = new Date(date);
+        return fetch(`${url}${parsedDate.getFullYear()}/${parsedDate.getMonth() + 1}`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('Fehler beim Abrufen der Daten');
@@ -53,7 +54,7 @@ export default function useExpenses() {
     }
 
     const updateItem = async (params) => {
-        const { ...updatedItem } = params; // Entfernen Sie die Felder id und _id, da sie nicht im Body des PUT-Requests benötigt werden
+        const { ...updatedItem } = params;
         try {
             const response = await fetch(`${url}${params._id}`, {
                 method: 'PUT',
@@ -66,8 +67,9 @@ export default function useExpenses() {
                 throw new Error('Fehler beim Aktualisieren einer Zeile');
             }
             const responseData = await response.json();
-            fetchItemsByDate();
+            await fetchItemsByDate(responseData.date);
             return responseData;
+            
         } catch (error) {
             console.error('Fehler beim Aktualisieren einer Zeile:', error);
         }

@@ -12,10 +12,14 @@ export default function MonthlyPage() {
     const [date, setDate] = useState(dayjs());
     const [page, setPage] = useState(1);
 
-    const totalPrice = items.reduce((acc, item) => acc + item.price, 0); // Summiere die Preise
+    const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
 
     const handleAddItem = () => {
         addItem(date);
+    }
+
+    const handleUpdateItem = (newData) => {
+        return updateItem(newData);
     }
 
     const handleDeleteItems = () => {
@@ -46,20 +50,17 @@ export default function MonthlyPage() {
                         pagination: { paginationModel: { pageSize: 10 } },
                         page: { page }
                     }}
-
                     editMode='row'
                     getRowId={(row) => row._id}
                     rows={items}
-                    processRowUpdate={updateItem}
+                    processRowUpdate={handleUpdateItem}
                     onProcessRowUpdateError={e => { console.log(e) }}
-
                     onRowSelectionModelChange={(ids) => {
                         const selectedIDs = new Set(ids);
                         const selected = items.filter((row) =>
                             selectedIDs.has(row._id.toString()));
                         setSelectedItems(selected);
                     }}
-
                     columns={[
                         { field: 'name', headerName: 'name', width: 200, editable: true },
                         { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },

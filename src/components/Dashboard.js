@@ -59,17 +59,13 @@ const Dashboard = () => {
                 </List>
                 <Divider />
             </Drawer>
-            <Container sx={{
-                margin: 5,
-                padding: 7,
-                borderRadius: 3,
+            <div style={{
                 backgroundColor: '#2C3333',
-                width: '100vh',
-                display: 'flex',
+                width: '100%',   
                 justifyContent: 'center'
             }}>
                 <Table></Table>
-            </Container>
+            </div>
         </div>
     );
 }

@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Container, Stack, Typography } from '@mui/material';
+import { DateCalendar, LocalizationProvider, MonthCalendar } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 function Table() {
     const url = "http://localhost:3002/";
     const [items, setItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
+    const [date, setDate] = useState(dayjs());
+    const [page, setPage] = useState(1);
+    const pageSize = 10;
 
     const fetchItems = () => {
         return fetch(url)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Fehler beim Abrufen der Daten');
+                }
+                return res.json();
+            })
+            .then((data) => setItems(data))
+            .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+    }
+
+    const fetchItemsByDate = () => {
+        return fetch(`${url}${date.$y}/${date.$M + 1}`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('Fehler beim Abrufen der Daten');
@@ -24,6 +42,7 @@ function Table() {
             name: "",
             category: 0,
             price: 0,
+            date: new Date(date.$d)
         };
 
         await fetch(url, {
@@ -37,8 +56,7 @@ function Table() {
                 if (!response.ok) {
                     throw new Error('Fehler beim Hinzufügen einer Zeile');
                 }
-                // Aktualisieren Sie den Zustand nach erfolgreichem Hinzufügen
-                fetchItems();
+                fetchItemsByDate();
             })
             .catch(error => console.error('Fehler beim Hinzufügen einer Zeile:', error));
     }
@@ -57,9 +75,8 @@ function Table() {
                 throw new Error('Fehler beim Aktualisieren einer Zeile');
             }
             const responseData = await response.json();
+            fetchItemsByDate();
             return responseData;
-            fetchItems();
-            return response;
         } catch (error) {
             console.error('Fehler beim Aktualisieren einer Zeile:', error);
         }
@@ -87,44 +104,96 @@ function Table() {
     }
 
     useEffect(() => {
-        fetchItems();
-    }, [])
+        fetchItemsByDate();
+    }, [date])
+
+    const displayLastPage = (e) => {
+        const page = Math.ceil(items.length / pageSize);
+        setPage(page);
+    }
 
     const totalPrice = items.reduce((acc, item) => acc + item.price, 0); // Summiere die Preise
 
     return (
-        <div>
-            <DataGrid
-                editMode='row'
-                getRowId={(row) => row._id}
-                rows={items}
-                processRowUpdate={updateRow}
-                onProcessRowUpdateError={e => { console.log(e) }}
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+        }}>
+            <div style={{
+                height: 620,
+                backgroundColor: '#3D4444',
+                borderRadius: 2,
+                padding: 2
+            }}>
+                <DataGrid
+                    autoHeight={false}
+                    style={{
+                    }}
+                    initialState={{
+                        pagination: { paginationModel: { pageSize: 10 } },
+                        page: { page }
+                    }}
 
-                onRowSelectionModelChange={(ids) => {
-                    const selectedIDs = new Set(ids);
-                    const selected = items.filter((row) =>
-                        selectedIDs.has(row._id.toString()));
-                    setSelectedItems(selected);
-                }}
+                    editMode='row'
+                    getRowId={(row) => row._id}
+                    rows={items}
+                    processRowUpdate={updateRow}
+                    onProcessRowUpdateError={e => { console.log(e) }}
 
-                columns={[
-                    { field: 'name', headerName: 'name', width: 200, editable: true },
-                    { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },
-                    { field: 'price', headerName: 'price', type: 'number', width: 100, editable: true },
-                ]}
-                pageSize={5}
-                checkboxSelection
-            />
-            <Typography color='white' variant="h4" fontWeight={800} m="5px" align="right">Total Price: {totalPrice}</Typography>
-            <Stack sx={{
-                borderRadius: 3,
-                padding: 3,
-                justifyContent: "right"
-            }} direction="row" spacing={3}>
-                <Button onClick={addRow} color="success" size="large" variant="contained">+</Button>
-                <Button onClick={deleteRows} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
-            </Stack>
+                    onRowSelectionModelChange={(ids) => {
+                        const selectedIDs = new Set(ids);
+                        const selected = items.filter((row) =>
+                            selectedIDs.has(row._id.toString()));
+                        setSelectedItems(selected);
+                    }}
+
+                    columns={[
+                        { field: 'name', headerName: 'name', width: 200, editable: true },
+                        { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },
+                        { field: 'price', headerName: 'price', type: 'number', width: 100, editable: true },
+                    ]}
+                    pageSize={10}
+                    pageSizeOptions={[5, 10, 25]}
+                    rowHeight={50}
+                    checkboxSelection
+                />
+                <Stack style={{
+                    backgroundColor: '#3D4444',
+                    padding: 5,
+                    borderRadius: 5,
+                    justifyContent: "right"
+                }} direction="row" spacing={3}>
+                    <Typography color='white' variant="h4" fontWeight={800} m="5px" align="right">Total Price: {totalPrice}</Typography>
+                    <Button onClick={() => {
+                        addRow();
+                        displayLastPage();
+                    }} color="success" size="large" variant="contained">+</Button>
+                    <Button onClick={deleteRows} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
+                </Stack>
+            </div>
+            <div style={{
+                position: 'relative',
+                justifyContent: 'center',
+                backgroundColor: '#3D4444',
+                borderRadius: 2,
+                padding: 2
+            }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateCalendar
+                        sx={{
+                            color: 'white'
+                        }}
+                        openTo='month'
+                        views={['year', 'month']}
+                        value={date}
+                        onChange={(newDate) => {
+                            setDate(newDate);
+                        }}
+                    >
+
+                    </DateCalendar>
+                </LocalizationProvider>
+            </div>
         </div>
     );
 }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Container, Stack, Typography } from '@mui/material';
-import { DateCalendar, LocalizationProvider, MonthCalendar } from '@mui/x-date-pickers';
+import { Button, Stack, Typography } from '@mui/material';
+import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import useExpenses from '../hooks/useExpenses';
 
 export default function MonthlyPage() {
@@ -14,16 +14,20 @@ export default function MonthlyPage() {
 
     const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
 
-    const handleAddItem = () => {
-        addItem(date);
+    const handleAddItem = async () => {
+        await addItem(date);
+        fetchItemsByDate(date);
     }
 
-    const handleUpdateItem = (newData) => {
-        return updateItem(newData);
+    const handleUpdateItem = async (newData) => {
+        const newItem = await updateItem(newData);
+        fetchItemsByDate(date);
+        return newItem;
     }
 
-    const handleDeleteItems = () => {
-        deleteItems(selectedItems);
+    const handleDeleteItems = async () => {
+        await deleteItems(selectedItems);
+        fetchItemsByDate(date);
     }
 
     useEffect(() => {
@@ -64,7 +68,13 @@ export default function MonthlyPage() {
                     columns={[
                         { field: 'name', headerName: 'name', width: 200, editable: true },
                         { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },
-                        { field: 'price', headerName: 'price', type: 'number', width: 100, editable: true },
+                        {
+                            field: 'price', headerName: 'price', type: 'number', width: 100, editable: true, valueFormatter: (params) => {
+                                return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
+                                    params.value,
+                                )
+                            }
+                        },
                     ]}
                     pageSize={10}
                     pageSizeOptions={[5, 10, 25]}
@@ -77,7 +87,9 @@ export default function MonthlyPage() {
                     borderRadius: 5,
                     justifyContent: "right"
                 }} direction="row" spacing={3}>
-                    <Typography color='white' variant="h4" fontWeight={800} m="5px" align="right">Total Price: {totalPrice}</Typography>
+                    <Typography color='white' variant="h4" fontWeight={800} m="5px" align="right">Total Price: {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
+                        totalPrice
+                    )}</Typography>
                     <Button onClick={handleAddItem} color="success" size="large" variant="contained">+</Button>
                     <Button onClick={handleDeleteItems} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
                 </Stack>

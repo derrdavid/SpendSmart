@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
 
-export default function useExpenses() {
+const ExpenseContext = createContext();
+
+export const ExpenseProvider = ({ children }) => {
     const url = "http://localhost:3002/";
     const [items, setItems] = useState([]);
 
@@ -12,7 +14,7 @@ export default function useExpenses() {
                 }
                 return res.json();
             })
-            .then((data) => setItems(data))
+            .then((data) => setItems([...data]))
             .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
     }
 
@@ -25,7 +27,10 @@ export default function useExpenses() {
                 }
                 return res.json();
             })
-            .then((data) => setItems(data))
+            .then((data) => {
+                const tempData = [...data];
+                setItems(tempData)
+            })
             .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
     }
 
@@ -92,6 +97,10 @@ export default function useExpenses() {
                 .catch(error => console.error('Fehler beim Löschen einer Zeile:', error));
         }
     }
-
-    return { items, fetchItemsByDate, addItem, updateItem, deleteItems };
+    return (
+        <ExpenseContext.Provider value={{ items, fetchItemsByDate, addItem, updateItem, deleteItems }}>
+            {children}
+        </ExpenseContext.Provider>
+    );
 }
+export const useExpenses = () => useContext(ExpenseContext);

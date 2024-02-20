@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
-import useExpenses from '../hooks/useExpenses';
+import { useExpenses } from '../hooks/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
 
 export default function ExpensesList({ date }) {
     const { items, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
     const [selectedItems, setSelectedItems] = useState([]);
-    const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
 
     const handleAddItem = async () => {
         await addItem(date);
@@ -75,9 +74,6 @@ export default function ExpensesList({ date }) {
                 padding: 5,
                 justifyContent: "right"
             }} direction="row" spacing={3}>
-                <Typography color='white' variant="h4" fontWeight={800} m="5px" align="right">Total Price: {new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                    totalPrice
-                )}</Typography>
                 <Button onClick={handleAddItem} size="large" variant="contained">+</Button>
                 <Button onClick={handleDeleteItems} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
             </Stack>

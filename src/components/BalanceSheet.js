@@ -31,9 +31,12 @@ export default function BalanceSheet() {
     return (
         <div style={{
             height: '100%',
-            backgroundColor: '#3D4444'
         }}>
-            <TableContainer style={{}}>
+            <TableContainer sx={{
+                backgroundColor: '#F4F4F2',
+                borderRadius: 5,
+                boxShadow: 1
+            }}>
                 <Table stickyHeader>
                     <TableHead>
                         <TableRow>
@@ -57,7 +60,6 @@ export default function BalanceSheet() {
                     </TableBody>
 
                     <TableFooter style={{
-                        backgroundColor: 'black',
                         position: 'sticky',
                         bottom: 0
                     }}>

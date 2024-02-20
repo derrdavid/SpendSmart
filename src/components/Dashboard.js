@@ -7,7 +7,6 @@ export default function Dashboard() {
         <div style={{ display: 'flex', height: '90vh' }}>
             <DashboardDrawer />
             <div style={{
-                backgroundColor: '#2C3333',
                 width: '100%',
                 justifyContent: 'center'
             }}>

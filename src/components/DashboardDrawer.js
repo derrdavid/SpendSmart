@@ -6,54 +6,25 @@ export default function DashboardDrawer() {
         <Drawer
             PaperProps={{
                 sx: {
-                    backgroundColor: '#2C3333',
-                    color: '#E7F6F2'
+                    backgroundColor: '#F4F4F2',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                 }
             }}
             sx={{
-                width: 240,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
-                    width: 240,
+                    height: 50,
                     boxSizing: 'border-box',
                 },
             }}
             variant="permanent"
-            anchor="left"
+            anchor="top"
         >
-            <Typography variant="h3" align="center" sx={{ mt: 5, mb: 5, fontWeight: 300 }}>
-                <CreditCard sx={{ fontSize: '40px', m: 1 }} />
-                Spend
-                Smart
+            <Typography variant="h7" sx={{ ml: '25%', fontWeight: 900, display: 'inline' }}>
+                Spend Smart
             </Typography>
-            <Divider />
-            <List>
-                <ListItemButton className='listItemButton'>
-                    <ListItemIcon>
-                        <DashboardRounded></DashboardRounded>
-                    </ListItemIcon>
-                    <ListItemText primary="Overview" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <ReceiptRounded></ReceiptRounded>
-                    </ListItemIcon>
-                    <ListItemText primary="Monthly Expenses" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <BarChartRounded></BarChartRounded>
-                    </ListItemIcon>
-                    <ListItemText primary="Statistics" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <InfoRounded></InfoRounded>
-                    </ListItemIcon>
-                    <ListItemText primary="about" />
-                </ListItemButton>
-            </List>
-            <Divider />
-        </Drawer>
+        </Drawer >
     )
 }

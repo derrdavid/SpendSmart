@@ -5,6 +5,7 @@ import ExpensesList from '../components/ExpensesList';
 import BalanceSheet from '../components/BalanceSheet';
 import MonthSelection from '../components/MonthSelection';
 import { ExpenseProvider } from '../hooks/ExpenseContext';
+import ExpensesDonut from '../components/ExpensesDonut';
 
 export default function MonthlyPage() {
     const [date, setDate] = useState(dayjs());
@@ -26,7 +27,7 @@ export default function MonthlyPage() {
                 <Divider orientation="vertical" flexItem />
                 <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                     <div>
-                        <h1>PieChart</h1>
+                        <h1>DonutChart</h1>
                     </div>
                     <div>
                         <h1>BarChart</h1>

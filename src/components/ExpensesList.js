@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Stack } from '@mui/material';
 import { useExpenses } from '../hooks/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
+import { CategoryBadge, CategoryBadgeEdit } from './CategoryBadge';
 
 export default function ExpensesList({ date }) {
     const { items, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
@@ -23,6 +24,12 @@ export default function ExpensesList({ date }) {
         fetchItemsByDate(date);
     }
 
+    const openPopUp = () => {
+        return (
+            <h1>its a prank!</h1>
+        );
+    }
+
     useEffect(() => {
         fetchItemsByDate(date);
     }, [date])
@@ -31,13 +38,14 @@ export default function ExpensesList({ date }) {
     return (
         <div style={{
             height: 620,
-            backgroundColor: '#3D4444',
-            borderRadius: 2,
             padding: 2
         }}>
             <DataGrid
                 autoHeight={false}
-                style={{
+                sx={{
+                    backgroundColor: '#F4F4F2',
+                    borderRadius: 5,
+                    boxShadow: 1
                 }}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10 } },
@@ -54,8 +62,16 @@ export default function ExpensesList({ date }) {
                     setSelectedItems(selected);
                 }}
                 columns={[
-                    { field: 'name', headerName: 'name', width: 200, editable: true },
-                    { field: 'category', headerName: 'category', type: 'number', width: 200, editable: true },
+                    { field: 'name', headerName: 'name', width: 150, editable: true },
+                    {
+                        field: 'category', headerName: 'category', type: 'number', width: 200, editable: true,
+                        renderCell: (params) => <CategoryBadge category={params.value} />,
+                        renderEditCell: (params) => {
+                            return (
+                                <CategoryBadgeEdit category={params.value}></CategoryBadgeEdit>
+                            )
+                        }
+                    },
                     {
                         field: 'price', headerName: 'price', type: 'number', width: 100, editable: true, valueFormatter: (params) => {
                             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
@@ -70,7 +86,6 @@ export default function ExpensesList({ date }) {
                 checkboxSelection
             />
             <Stack style={{
-                backgroundColor: '#3D4444',
                 padding: 5,
                 justifyContent: "right"
             }} direction="row" spacing={3}>

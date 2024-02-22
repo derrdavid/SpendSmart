@@ -24,12 +24,6 @@ export default function ExpensesList({ date }) {
         fetchItemsByDate(date);
     }
 
-    const openPopUp = () => {
-        return (
-            <h1>its a prank!</h1>
-        );
-    }
-
     useEffect(() => {
         fetchItemsByDate(date);
     }, [date])
@@ -54,7 +48,7 @@ export default function ExpensesList({ date }) {
                 getRowId={(row) => row._id}
                 rows={items}
                 processRowUpdate={handleUpdateItem}
-                onProcessRowUpdateError={e => { console.log(e) }}
+                onProcessRowUpdateError={e => { console.error(e) }}
                 onRowSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
                     const selected = items.filter((row) =>
@@ -64,11 +58,11 @@ export default function ExpensesList({ date }) {
                 columns={[
                     { field: 'name', headerName: 'name', width: 150, editable: true },
                     {
-                        field: 'category', headerName: 'category', type: 'number', width: 200, editable: true,
-                        renderCell: (params) => <CategoryBadge category={params.value} />,
+                        field: 'category', headerName: 'category', width: 200, editable: true,
+                        renderCell: (params) => <CategoryBadge category={params.row.category} />,
                         renderEditCell: (params) => {
                             return (
-                                <CategoryBadgeEdit category={params.value}></CategoryBadgeEdit>
+                                < CategoryBadgeEdit expense={params.row} category={params.row.category} ></CategoryBadgeEdit>
                             )
                         }
                     },
@@ -92,6 +86,6 @@ export default function ExpensesList({ date }) {
                 <Button onClick={handleAddItem} size="large" variant="contained">+</Button>
                 <Button onClick={handleDeleteItems} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
             </Stack>
-        </div>
+        </div >
     )
 }

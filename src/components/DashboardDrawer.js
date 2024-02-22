@@ -1,5 +1,4 @@
-import { Drawer, List, ListItemText, Divider, Typography, ListItemButton, ListItemIcon } from '@mui/material';
-import { BarChartRounded, CreditCard, DashboardRounded, InfoRounded, ReceiptRounded } from '@mui/icons-material';
+import { Drawer, Typography } from '@mui/material';
 
 export default function DashboardDrawer() {
     return (

@@ -1,9 +1,9 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children }) => {
-    const url = "http://localhost:3002/";
+    const url = "http://localhost:3002/expenses/";
     const [items, setItems] = useState([]);
 
     const fetchItems = () => {
@@ -72,7 +72,6 @@ export const ExpenseProvider = ({ children }) => {
             }
             const responseData = await response.json();
             return responseData;
-
         } catch (error) {
             console.error('Fehler beim Aktualisieren einer Zeile:', error);
         }

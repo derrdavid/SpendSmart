@@ -4,14 +4,43 @@ import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoryContext";
 
 export default function BalanceSheet() {
-    const [total, setTotal] = useState(0);
+    const [total, setTotal] = useState({});
     const { items } = useExpenses();
     const { categories } = useCategories();
 
     useEffect(() => {
-        setTotal(0);
+        calcCategorySum();
     }, [items]);
 
+    const calcCategorySum = () => {
+        const tempTotal = {};
+      
+        items.forEach((item) => {
+          if(item.category !== null){
+            const categoryName = item.category.name;
+            const categoryPrice = item.price; 
+      
+          if (!tempTotal.hasOwnProperty(categoryName)) {
+            tempTotal[categoryName] = 0; 
+          }
+      
+          tempTotal[categoryName] += categoryPrice; 
+          }
+        });
+      
+        setTotal(tempTotal); 
+      };
+      
+      const calcTotalSum = () => {
+        let totalSum = 0;
+    
+        items.forEach((item) => {
+            totalSum += item.price;
+        });
+    
+        return totalSum;
+    };
+    
     return (
         <div style={{
             height: '100%',
@@ -30,16 +59,16 @@ export default function BalanceSheet() {
                     </TableHead>
                     <TableBody height={200}>
                         {
-                            categories.map((entry, index) => {
+                            Object.entries(total).map(([name, sum], i) => {
                                 return (
-                                    <TableRow key={index}>
-                                        <TableCell size="small">{entry.category}</TableCell>
+                                    <TableRow key={i}>
+                                        <TableCell size="small">{name}</TableCell>
                                         <TableCell size="small">{new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                                            100
+                                            sum
                                         )}</TableCell>
                                     </TableRow>
                                 );
-                            })
+                            })                            
                         }
                     </TableBody>
 
@@ -51,7 +80,7 @@ export default function BalanceSheet() {
                             <TableCell></TableCell>
                             <TableCell>{
                                 new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                                    total,
+                                    calcTotalSum()
                                 )
                             }</TableCell>
                         </TableRow>

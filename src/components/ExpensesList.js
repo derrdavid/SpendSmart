@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { CategoryBadge, CategoryBadgeEdit } from './CategoryBadge';
 
 export default function ExpensesList({ date }) {
-    const { items, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
+    const { items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
     const [selectedItems, setSelectedItems] = useState([]);
 
     const handleAddItem = async () => {
@@ -14,9 +14,15 @@ export default function ExpensesList({ date }) {
     }
 
     const handleUpdateItem = async (newData) => {
-        const newItem = await updateItem(newData);
-        fetchItemsByDate(date);
-        return newItem;
+        if (newData !== null) {
+            const newItem = await updateItem({
+                _id: newData._id,
+                name: newData.name,
+                price: newData.price
+            });
+            await fetchItemsByDate(date);
+            return newItem;
+        }
     }
 
     const handleDeleteItems = async () => {

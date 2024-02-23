@@ -36,8 +36,8 @@ export const CategoryBadge = ({ category }) => {
 }
 
 export const CategoryBadgeEdit = ({ expense, category }) => {
-
     const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(category); // Hier wird die aktuelle ausgewählte Kategorie im lokalen State gespeichert
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -52,7 +52,7 @@ export const CategoryBadgeEdit = ({ expense, category }) => {
     return (
         <div>
             <Button onClick={handleClick} sx={{ textTransform: 'none' }}>
-                <CategoryBadge category={category}></CategoryBadge>
+                <CategoryBadge category={selectedCategory}></CategoryBadge>
             </Button>
             <Popover
                 id={id}
@@ -64,7 +64,7 @@ export const CategoryBadgeEdit = ({ expense, category }) => {
                     horizontal: 'left',
                 }}
             >
-                <CategoryPopover expense={expense} handleClose={handleClose} >
+                <CategoryPopover expense={expense} handleClose={handleClose} setSelectedCategory={setSelectedCategory}>
 
                 </CategoryPopover>
             </Popover>
@@ -72,9 +72,9 @@ export const CategoryBadgeEdit = ({ expense, category }) => {
     )
 }
 
-const CategoryPopover = ({ expense, handleClose }) => {
+const CategoryPopover = ({ expense, handleClose, setSelectedCategory }) => {
     const { categories, addCategory, deleteCategory } = useCategories();
-    const { updateItem } = useExpenses();
+    const { updateItem, setItems } = useExpenses();
 
     const [tempCategory, setTempCategory] = useState({
         name: "",
@@ -96,22 +96,20 @@ const CategoryPopover = ({ expense, handleClose }) => {
     const handleAddButtonClick = async () => {
         if (tempCategory.name.trim().length > 0 != "") {
             handleClose();
-            // add Category To Categories
             const newCategory = await addCategory(tempCategory);
-            // set Category For Expense
             expense.category = newCategory;
-            updateItem(expense);
+            await updateItem(expense);
+            setSelectedCategory(newCategory);
         }
     }
 
     const handleCategoryBadgeClick = async (category) => {
         handleClose();
-        expense.category = category;
-        updateItem(expense);
+        await updateItem({ ...expense, category: category });
+        setSelectedCategory(category);
     }
 
     const handleRemoveCategory = (id) => {
-        console.log(id)
         deleteCategory(id);
     }
 

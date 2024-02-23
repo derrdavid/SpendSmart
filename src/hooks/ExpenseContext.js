@@ -37,7 +37,7 @@ export const ExpenseProvider = ({ children }) => {
     const addItem = async (date) => {
         const newItem = {
             name: "",
-            category: 0,
+            category: null,
             price: 0,
             date: new Date(date)
         };
@@ -71,11 +71,16 @@ export const ExpenseProvider = ({ children }) => {
                 throw new Error('Fehler beim Aktualisieren einer Zeile');
             }
             const responseData = await response.json();
+
+            const updatedItems = items.map(item => item._id === responseData._id ? responseData : item);
+            setItems(updatedItems);
+
             return responseData;
         } catch (error) {
             console.error('Fehler beim Aktualisieren einer Zeile:', error);
         }
-    }
+    };
+
 
     const deleteItems = (selectedItems) => {
         if (selectedItems.length > 0) {
@@ -97,7 +102,7 @@ export const ExpenseProvider = ({ children }) => {
         }
     }
     return (
-        <ExpenseContext.Provider value={{ items, fetchItemsByDate, addItem, updateItem, deleteItems }}>
+        <ExpenseContext.Provider value={{ items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems }}>
             {children}
         </ExpenseContext.Provider>
     );

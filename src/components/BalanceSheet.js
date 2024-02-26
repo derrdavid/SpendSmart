@@ -6,7 +6,6 @@ import { useCategories } from "../hooks/CategoryContext";
 export default function BalanceSheet() {
     const [total, setTotal] = useState({});
     const { items } = useExpenses();
-    const { categories } = useCategories();
 
     useEffect(() => {
         calcCategorySum();

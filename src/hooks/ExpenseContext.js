@@ -14,7 +14,6 @@ export const ExpenseProvider = ({ children }) => {
                 }
                 return res.json();
             })
-            .then((data) => setItems([...data]))
             .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
     }
 
@@ -102,7 +101,7 @@ export const ExpenseProvider = ({ children }) => {
         }
     }
     return (
-        <ExpenseContext.Provider value={{ items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems }}>
+        <ExpenseContext.Provider value={{ items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems, fetchItems }}>
             {children}
         </ExpenseContext.Provider>
     );

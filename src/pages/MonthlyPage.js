@@ -6,6 +6,7 @@ import BalanceSheet from '../components/BalanceSheet';
 import MonthSelection from '../components/MonthSelection';
 import { ExpenseProvider } from '../hooks/ExpenseContext';
 import { CategoryProvider } from '../hooks/CategoryContext';
+import { SavingsChart } from '../components/SavingsChart';
 
 export default function MonthlyPage() {
     const [date, setDate] = useState(dayjs());
@@ -28,10 +29,7 @@ export default function MonthlyPage() {
                     <Divider orientation="vertical" flexItem />
                     <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                         <div>
-                            <h1>DonutChart</h1>
-                        </div>
-                        <div>
-                            <h1>BarChart</h1>
+                            <SavingsChart></SavingsChart>
                         </div>
                     </Stack>
                 </div>

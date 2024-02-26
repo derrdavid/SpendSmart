@@ -7,7 +7,7 @@ import { CategoryBadge } from "./CategoryBadge";
 
 export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCategory }) => {
     const { categories, addCategory, deleteCategory } = useCategories();
-    const { updateItem } = useExpenses();
+    const { updateExpense } = useExpenses();
 
     const [tempCategory, setTempCategory] = useState({
         name: "",
@@ -31,14 +31,14 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
             handleClose();
             const newCategory = await addCategory(tempCategory);
             expense.category = newCategory;
-            await updateItem(expense);
+            await updateExpense(expense);
             setSelectedCategory(newCategory);
         }
     }
 
     const handleCategoryBadgeClick = async (category) => {
         handleClose();
-        await updateItem({ ...expense, category: category });
+        await updateExpense({ ...expense, category: category });
         setSelectedCategory(category);
     }
 

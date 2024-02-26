@@ -7,34 +7,35 @@ import currencyFormatter from '../utils/currencyFormatter';
 import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
 
 export default function ExpensesList({ date }) {
-    const { items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
+    const { allExpenses, setAllExpenses, filterExpensesByDate,
+        addExpense, updateExpense, deleteExpenses, fetchExpenses,
+        filteredExpenses, setFilteredExpenses } = useExpenses();
+
     const [selectedItems, setSelectedItems] = useState([]);
 
-    const handleAddItem = async () => {
-        await addItem(date);
-        fetchItemsByDate(date);
+    useEffect(() => {
+        filterExpensesByDate(date);
+    }, [date, allExpenses]);
+    
+
+    const handleAddExpense = () => {
+        addExpense(date);
     }
 
-    const handleUpdateItem = async (newData) => {
+    const handleUpdateExpense = async (newData) => {
         if (newData !== null) {
-            const newItem = await updateItem({
+            const newItem = await updateExpense({
                 _id: newData._id,
                 name: newData.name,
                 price: newData.price
             });
-            await fetchItemsByDate(date);
             return newItem;
         }
     }
 
-    const handleDeleteItems = async () => {
-        await deleteItems(selectedItems);
-        fetchItemsByDate(date);
+    const handleDeleteExpenses = () => {
+        deleteExpenses(selectedItems);
     }
-
-    useEffect(() => {
-        fetchItemsByDate(date);
-    }, [date])
 
 
     return (
@@ -54,12 +55,12 @@ export default function ExpensesList({ date }) {
                 }}
                 editMode='row'
                 getRowId={(row) => row._id}
-                rows={items}
-                processRowUpdate={handleUpdateItem}
+                rows={filteredExpenses}
+                processRowUpdate={handleUpdateExpense}
                 onProcessRowUpdateError={e => { console.error(e) }}
                 onRowSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
-                    const selected = items.filter((row) =>
+                    const selected = filteredExpenses.filter((row) =>
                         selectedIDs.has(row._id.toString()));
                     setSelectedItems(selected);
                 }}
@@ -89,8 +90,8 @@ export default function ExpensesList({ date }) {
                 padding: 5,
                 justifyContent: "right"
             }} direction="row" spacing={3}>
-                <Button onClick={handleAddItem} size="large" variant="contained">+</Button>
-                <Button onClick={handleDeleteItems} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
+                <Button onClick={handleAddExpense} size="large" variant="contained">+</Button>
+                <Button onClick={handleDeleteExpenses} color="error" variant="outlined"> DELETE {selectedItems.length > 0 ? `[${selectedItems.length}]` : ''}</Button>
             </Stack>
         </div >
     )

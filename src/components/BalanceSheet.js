@@ -5,41 +5,41 @@ import currencyFormatter from "../utils/currencyFormatter";
 
 export default function BalanceSheet() {
     const [total, setTotal] = useState({});
-    const { items } = useExpenses();
+    const { filteredExpenses } = useExpenses();
 
     useEffect(() => {
         calcCategorySum();
-    }, [items]);
+    }, [filteredExpenses]);
 
     const calcCategorySum = () => {
         const tempTotal = {};
-      
-        items.forEach((item) => {
-          if(item.category !== null){
-            const categoryName = item.category.name;
-            const categoryPrice = item.price; 
-      
-          if (!tempTotal.hasOwnProperty(categoryName)) {
-            tempTotal[categoryName] = 0; 
-          }
-      
-          tempTotal[categoryName] += categoryPrice; 
-          }
+
+        filteredExpenses.forEach((item) => {
+            if (item.category !== null) {
+                const categoryName = item.category.name;
+                const categoryPrice = item.price;
+
+                if (!tempTotal.hasOwnProperty(categoryName)) {
+                    tempTotal[categoryName] = 0;
+                }
+
+                tempTotal[categoryName] += categoryPrice;
+            }
         });
-      
-        setTotal(tempTotal); 
-      };
-      
-      const calcTotalSum = () => {
+
+        setTotal(tempTotal);
+    };
+
+    const calcTotalSum = () => {
         let totalSum = 0;
-    
-        items.forEach((item) => {
+
+        filteredExpenses.forEach((item) => {
             totalSum += item.price;
         });
-    
+
         return totalSum;
     };
-    
+
     return (
         <div style={{
             height: '100%',
@@ -67,7 +67,7 @@ export default function BalanceSheet() {
                                         )}</TableCell>
                                     </TableRow>
                                 );
-                            })                            
+                            })
                         }
                     </TableBody>
 

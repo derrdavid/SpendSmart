@@ -7,16 +7,15 @@ import currencyFormatter from "../utils/currencyFormatter";
 export const SavingsChart = () => {
     const [chartData, setChartData] = useState([]);
     const { categories } = useCategories();
-    const { fetchItems, items } = useExpenses();
+    const { allExpenses } = useExpenses();
 
     useEffect(() => {
-        initChartData();
+        loadChartData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [items]);
+    }, [allExpenses]);
 
-    const initChartData = async () => {
+    const loadChartData = async () => {
         try {
-            const allExpenses = await fetchItems();
             const newChartData = [];
 
             categories.forEach(category => {

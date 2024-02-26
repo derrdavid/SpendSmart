@@ -4,36 +4,36 @@ const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children }) => {
     const url = "http://localhost:3002/expenses/";
-    const [items, setItems] = useState([]);
+    const [allExpenses, setAllExpenses] = useState([]);
+    const [filteredExpenses, setFilteredExpenses] = useState([]);
 
-    const fetchItems = () => {
-        return fetch(url)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Fehler beim Abrufen der Daten');
-                }
-                return res.json();
-            })
-            .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
+    useEffect(() => {
+        fetchExpenses();
+    }, []);
+
+    const fetchExpenses = async () => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const responseData = await response.json();
+            setAllExpenses([...responseData]);
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+        }
+    };    
+
+    const filterExpensesByDate = async (date) => {
+        const selectedMonth = new Date(date).getMonth();
+        const filteredExpenses = allExpenses.filter((expense) => {
+            const expenseMonth = new Date(expense.date).getMonth();
+            return expenseMonth === selectedMonth;
+        });
+        setFilteredExpenses([...filteredExpenses]);
     }
 
-    const fetchItemsByDate = async (date) => {
-        const parsedDate = await new Date(date);
-        return fetch(`${url}${parsedDate.getFullYear()}/${parsedDate.getMonth() + 1}`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Fehler beim Abrufen der Daten');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                const tempData = [...data];
-                setItems(tempData)
-            })
-            .catch(error => console.error('Fehler beim Abrufen der Daten:', error));
-    }
-
-    const addItem = async (date) => {
+    const addExpense = async (date) => {
         const newItem = {
             name: "",
             category: null,
@@ -41,22 +41,28 @@ export const ExpenseProvider = ({ children }) => {
             date: new Date(date)
         };
 
-        await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newItem)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Fehler beim Hinzufügen einer Zeile');
-                }
-            })
-            .catch(error => console.error('Fehler beim Hinzufügen einer Zeile:', error));
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newItem)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to add a new expense.');
+            }
+
+            const responseData = await response.json();
+            setAllExpenses((prev) => [...prev, responseData]);
+
+        } catch (error) {
+            console.error('Error while adding a new expense:', error);
+        }
     }
 
-    const updateItem = async (params) => {
+    const updateExpense = async (params) => {
         const { ...updatedItem } = params;
         try {
             const response = await fetch(`${url}${params._id}`, {
@@ -67,43 +73,58 @@ export const ExpenseProvider = ({ children }) => {
                 body: JSON.stringify(updatedItem)
             });
             if (!response.ok) {
-                throw new Error('Fehler beim Aktualisieren einer Zeile');
+                throw new Error('Failed to update an expense.');
             }
             const responseData = await response.json();
 
-            const updatedItems = items.map(item => item._id === responseData._id ? responseData : item);
-            setItems(updatedItems);
+            const updatedItems = allExpenses.map(item => item._id === responseData._id ? responseData : item);
+            setAllExpenses(updatedItems);
 
             return responseData;
         } catch (error) {
-            console.error('Fehler beim Aktualisieren einer Zeile:', error);
+            console.error('Error while updating an expense:', error);
         }
     };
 
-
-    const deleteItems = (selectedItems) => {
+    const deleteExpenses = async (selectedItems) => {
         if (selectedItems.length > 0) {
             const jsonBody = {
                 ids: selectedItems
             };
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(jsonBody)
-            }).then(response => {
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonBody)
+                });
+
+                const updatedItems = allExpenses.filter(item => {
+                    const isSelected = selectedItems.some(selectedItem => selectedItem._id === item._id);
+                    return !isSelected;
+                });
+
+                setAllExpenses(updatedItems);
+
                 if (!response.ok) {
-                    throw new Error('Fehler beim Löschen einer Zeile');
+                    throw new Error('Failed to delete an expense.');
                 }
-            })
-                .catch(error => console.error('Fehler beim Löschen einer Zeile:', error));
+            } catch (error) {
+                console.error('Error while deleting an expense:', error);
+            }
         }
     }
+
     return (
-        <ExpenseContext.Provider value={{ items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems, fetchItems }}>
+        <ExpenseContext.Provider value={{
+            allExpenses, setAllExpenses, filterExpensesByDate,
+            addExpense, updateExpense, deleteExpenses, fetchExpenses,
+            filteredExpenses, setFilteredExpenses
+        }}>
             {children}
         </ExpenseContext.Provider>
     );
 }
+
 export const useExpenses = () => useContext(ExpenseContext);

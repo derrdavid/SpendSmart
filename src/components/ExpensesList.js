@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, Stack } from '@mui/material';
 import { useExpenses } from '../hooks/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
-import { CategoryBadge, CategoryBadgeEdit } from './CategoryBadge';
+import { CategoryBadge } from './CategoryBadge/CategoryBadge';
 import currencyFormatter from '../utils/currencyFormatter';
+import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
 
 export default function ExpensesList({ date }) {
     const { items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
@@ -69,7 +70,7 @@ export default function ExpensesList({ date }) {
                         renderCell: (params) => <CategoryBadge category={params.row.category} />,
                         renderEditCell: (params) => {
                             return (
-                                < CategoryBadgeEdit expense={params.row} category={params.row.category} ></CategoryBadgeEdit>
+                                < CategoryBadgeEditMode expense={params.row} category={params.row.category} ></CategoryBadgeEditMode>
                             )
                         }
                     },

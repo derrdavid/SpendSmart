@@ -1,80 +1,13 @@
-import { Button, Divider, Grid, Input, List, ListItem, Popover, Stack, Typography, alpha } from "@mui/material";
+import { Button, Divider, Grid, Input, List, ListItem, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useCategories } from "../hooks/CategoryContext";
-import { useExpenses } from "../hooks/ExpenseContext";
-import { MoreHoriz, Remove } from "@mui/icons-material";
+import { useCategories } from "../../hooks/CategoryContext";
+import { useExpenses } from "../../hooks/ExpenseContext";
+import { Remove } from "@mui/icons-material";
+import { CategoryBadge } from "./CategoryBadge";
 
-export const CategoryBadge = ({ category }) => {
-
-    if (category == null || category.color == "") {
-        category = {
-            name: "none",
-            color: "#AAAAAA"
-        }
-    }
-
-    return (
-        <>
-            <span style={{
-                minWidth: '50px', minHeight: '25px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '1px',
-                borderRadius: '4px',
-                padding: '2px 8px',
-                color: category.color,
-                fontWeight: 'bold',
-                backgroundColor: alpha(category.color, 0.2),
-                border: `1px solid ${category.color}`,
-            }}>
-                {category.name}
-            </span>
-
-        </>
-
-    );
-}
-
-export const CategoryBadgeEdit = ({ expense, category }) => {
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(category); // Hier wird die aktuelle ausgewählte Kategorie im lokalen State gespeichert
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-    return (
-        <div>
-            <Button onClick={handleClick} sx={{ textTransform: 'none' }}>
-                <CategoryBadge category={selectedCategory}></CategoryBadge>
-            </Button>
-            <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-            >
-                <CategoryPopover expense={expense} handleClose={handleClose} setSelectedCategory={setSelectedCategory}>
-
-                </CategoryPopover>
-            </Popover>
-        </div>
-    )
-}
-
-const CategoryPopover = ({ expense, handleClose, setSelectedCategory }) => {
+export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCategory }) => {
     const { categories, addCategory, deleteCategory } = useCategories();
-    const { updateItem, setItems } = useExpenses();
+    const { updateItem } = useExpenses();
 
     const [tempCategory, setTempCategory] = useState({
         name: "",
@@ -153,4 +86,3 @@ const CategoryPopover = ({ expense, handleClose, setSelectedCategory }) => {
         </div>
     );
 }
-

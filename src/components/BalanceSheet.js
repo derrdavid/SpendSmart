@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
 import { useExpenses } from "../hooks/ExpenseContext";
 import { useEffect, useState } from "react";
-import { useCategories } from "../hooks/CategoryContext";
+import currencyFormatter from "../utils/currencyFormatter";
 
 export default function BalanceSheet() {
     const [total, setTotal] = useState({});
@@ -78,9 +78,7 @@ export default function BalanceSheet() {
                         <TableRow>
                             <TableCell></TableCell>
                             <TableCell>{
-                                new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                                    calcTotalSum()
-                                )
+                                currencyFormatter(calcTotalSum())
                             }</TableCell>
                         </TableRow>
                     </TableFooter>

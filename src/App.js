@@ -1,5 +1,6 @@
-import Dashboard from './components/Dashboard';
 import { ThemeProvider, createTheme } from '@mui/material';
+import DashboardPage from './pages/DashboardPage';
+import DashboardDrawer from './components/DashboardDrawer';
 
 const theme = createTheme({
   palette: {
@@ -13,7 +14,15 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Dashboard></Dashboard>
+      <div style={{ display: 'flex', height: '90vh' }}>
+        <DashboardDrawer/>
+        <div style={{
+          width: '100%',
+          justifyContent: 'center'
+        }}>
+          <DashboardPage />
+        </div>
+      </div>
     </ThemeProvider>
   );
 }

@@ -2,6 +2,7 @@ import { BarChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoryContext";
 import { useExpenses } from "../hooks/ExpenseContext";
+import currencyFormatter from "../utils/currencyFormatter";
 
 export const SavingsChart = () => {
     const [chartData, setChartData] = useState([]);
@@ -32,7 +33,13 @@ export const SavingsChart = () => {
                 }
                 const categorySum = categoryData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
                 if (categorySum > 0) {
-                    newChartData.push({ data: categoryData, stack: 'total', label: category.name, color: category.color, valueFormatter: currencyFormatter });
+                    newChartData.push({
+                        data: categoryData,
+                        stack: 'total',
+                        label: category.name,
+                        color: category.color,
+                        valueFormatter: currencyFormatter
+                    });
                 }
             });
             setChartData(newChartData);
@@ -41,11 +48,6 @@ export const SavingsChart = () => {
         }
     };
 
-    const currencyFormatter = new Intl.NumberFormat('de-DE', {
-        style: 'currency',
-        currency: 'EUR',
-      }).format;
-      
 
     const xLabels = [
         'Jan',

@@ -3,6 +3,7 @@ import { Button, Stack } from '@mui/material';
 import { useExpenses } from '../hooks/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
 import { CategoryBadge, CategoryBadgeEdit } from './CategoryBadge';
+import currencyFormatter from '../utils/currencyFormatter';
 
 export default function ExpensesList({ date }) {
     const { items, setItems, fetchItemsByDate, addItem, updateItem, deleteItems } = useExpenses();
@@ -74,9 +75,7 @@ export default function ExpensesList({ date }) {
                     },
                     {
                         field: 'price', headerName: 'price', type: 'number', width: 100, editable: true, valueFormatter: (params) => {
-                            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                                params.value,
-                            )
+                            return currencyFormatter(params.value);
                         }
                     },
                 ]}

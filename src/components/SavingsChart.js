@@ -24,7 +24,6 @@ export const SavingsChart = () => {
                     const filteredData = allExpenses.filter(expense =>
                         expense.category && expense.category._id === category._id && new Date(expense.date).getMonth() === i
                     );
-                    console.log(allExpenses)
                     let sum = 0;
                     filteredData.forEach(expense => {
                         sum += expense.price;
@@ -33,7 +32,7 @@ export const SavingsChart = () => {
                 }
                 const categorySum = categoryData.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
                 if (categorySum > 0) {
-                    newChartData.push({ data: categoryData, stack: 'total', label: category.name, color: category.color });
+                    newChartData.push({ data: categoryData, stack: 'total', label: category.name, color: category.color, valueFormatter: currencyFormatter });
                 }
             });
             setChartData(newChartData);
@@ -42,6 +41,27 @@ export const SavingsChart = () => {
         }
     };
 
+    const currencyFormatter = new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'EUR',
+      }).format;
+      
+
+    const xLabels = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+    ];
+
 
     return (
         <div style={{
@@ -49,6 +69,12 @@ export const SavingsChart = () => {
 
         }}>
             <BarChart
+                slotProps={{
+                    legend: {
+                        hidden: true
+                    }
+                }}
+                xAxis={[{ data: xLabels, scaleType: 'band' }]}
                 series={chartData}
                 width={600}
                 height={350}>

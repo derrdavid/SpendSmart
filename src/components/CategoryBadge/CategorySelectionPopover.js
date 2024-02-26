@@ -27,7 +27,7 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
     }
 
     const handleAddButtonClick = async () => {
-        if (tempCategory.name.trim().length > 0 != "") {
+        if ((tempCategory.name.trim().length > 0) !== "") {
             handleClose();
             const newCategory = await addCategory(tempCategory);
             expense.category = newCategory;

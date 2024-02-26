@@ -7,16 +7,15 @@ import currencyFormatter from '../utils/currencyFormatter';
 import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
 
 export default function ExpensesList({ date }) {
-    const { allExpenses, setAllExpenses, filterExpensesByDate,
-        addExpense, updateExpense, deleteExpenses, fetchExpenses,
-        filteredExpenses, setFilteredExpenses } = useExpenses();
+    const { allExpenses, filterExpensesByDate,
+        addExpense, updateExpense, deleteExpenses, filteredExpenses, } = useExpenses();
 
     const [selectedItems, setSelectedItems] = useState([]);
 
     useEffect(() => {
         filterExpensesByDate(date);
     }, [date, allExpenses]);
-    
+
 
     const handleAddExpense = () => {
         addExpense(date);

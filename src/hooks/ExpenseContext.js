@@ -9,6 +9,7 @@ export const ExpenseProvider = ({ children }) => {
 
     useEffect(() => {
         fetchExpenses();
+        // eslint-disable-next-line
     }, []);
 
     const fetchExpenses = async () => {

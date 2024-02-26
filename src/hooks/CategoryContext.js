@@ -8,6 +8,7 @@ export const CategoryProvider = ({ children }) => {
 
     useEffect(() => {
         fetchCategories();
+        // eslint-disable-next-line
     }, []);
 
     const fetchCategories = async () => {

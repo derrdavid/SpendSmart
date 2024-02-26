@@ -1,8 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material';
 import DashboardPage from './pages/DashboardPage';
 import DashboardDrawer from './components/DashboardDrawer';
-import { ExpenseProvider } from './hooks/ExpenseContext';
-import { CategoryProvider } from './hooks/CategoryContext';
+import DashboardFooter from './components/DashboardFooter';
 
 const theme = createTheme({
   palette: {
@@ -24,6 +23,7 @@ function App() {
         }}>
           <DashboardPage></DashboardPage>
         </div>
+        <DashboardFooter />
       </div>
     </ThemeProvider >
   );

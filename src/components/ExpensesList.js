@@ -38,12 +38,13 @@ export default function ExpensesList({ date }) {
 
     return (
         <div style={{
-            height: 620,
+            height: '60vh',
             padding: 2
         }}>
             <DataGrid
-                autoHeight={false}
                 sx={{
+                    padding: 1,
+                    width: '100%',
                     backgroundColor: '#F4F4F2',
                     borderRadius: 5,
                     boxShadow: 1

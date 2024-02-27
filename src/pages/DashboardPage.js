@@ -16,24 +16,32 @@ export default function DashboardPage() {
         <ExpenseProvider>
             <CategoryProvider>
                 <div style={{
-                    position: 'relative',
+                    maxHeight: '80vh',
+                    justifyContent: 'space-around',
+                    alignItems: 'flex-start',
                     display: 'flex',
                     justifyContent: 'space-around',
-                    margin: '5em'
+                    alignItems: 'flex-start',
+                    margin: '5em',
+                    gap: '2em'
                 }}>
-                    <ExpensesList date={date} />
-                    <Divider orientation="vertical" flexItem />
-                    <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
+                    <Stack spacing={2}>
                         <MonthSelection date={date} setDate={setDate} />
+                        <Divider orientation="horizontal" flexItem />
+                        <ExpensesList date={date} style={{ flex: '1' }} />
+                    </Stack>
+                    <Divider orientation="vertical" flexItem />
+                    <Stack direction='column' spacing={4} divider={<Divider orientation="horizontal" flexItem />}>
                         <BalanceSheet />
                     </Stack>
                     <Divider orientation="vertical" flexItem />
-                    <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-                        <SavingsChart></SavingsChart>
-                        <SavingsLineChart></SavingsLineChart>
+                    <Stack direction='column' spacing={4} divider={<Divider orientation="horizontal" flexItem />}>
+                        <SavingsChart />
+                        <SavingsLineChart />
                     </Stack>
                 </div>
             </CategoryProvider>
         </ExpenseProvider>
     );
+
 }

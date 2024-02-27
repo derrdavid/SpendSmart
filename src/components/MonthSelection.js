@@ -1,30 +1,29 @@
-import { DateCalendar, LocalizationProvider } from '@mui/x-date-pickers';
+import { TextField } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export default function MonthSelection({ date, setDate }) {
     return (
-        <div style={{
-            position: 'relative',
-            justifyContent: 'center',
-            padding: 2
-        }}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateCalendar
-                    sx={{
-                        backgroundColor: '#F4F4F2',
-                        borderRadius: 5,
-                        boxShadow: 1
-                    }}
-                    openTo='month'
-                    views={['year', 'month']}
-                    value={date}
-                    onChange={(newDate) => {
-                        setDate(newDate);
-                    }}
-                >
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+                openTo="month"
+                views={['year', 'month']}
+                value={date}
+                onChange={(newDate) => {
+                    setDate(newDate);
+                }}
+                slotProps={{
+                    textField: {
+                        variant: 'outlined',
+                        inputProps: {
+                            style: {
+                                textAlign: 'center'
+                            }
+                        }
+                    },
+                }}
 
-                </DateCalendar>
-            </LocalizationProvider>
-        </div>
+            />
+        </LocalizationProvider>
     );
 }

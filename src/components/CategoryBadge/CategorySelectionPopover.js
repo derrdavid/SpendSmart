@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Input, List, ListItem, Stack } from "@mui/material";
+import { Button, Divider, Grid, Input, List, ListItem, Stack, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useCategories } from "../../hooks/CategoryContext";
 import { useExpenses } from "../../hooks/ExpenseContext";
@@ -8,6 +8,8 @@ import { CategoryBadge } from "./CategoryBadge";
 export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCategory }) => {
     const { categories, addCategory, deleteCategory } = useCategories();
     const { updateExpense } = useExpenses();
+
+    const [inputError, setInputError] = useState(false);
 
     const [tempCategory, setTempCategory] = useState({
         name: "",
@@ -34,13 +36,19 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
         }));
     }
 
+    const handleInputFocus = () => {
+        setInputError(false); // Setzen Sie den Fehler auf false, wenn das Eingabefeld den Fokus erhält
+    };
+
     const handleAddButtonClick = async () => {
-        if ((tempCategory.name.trim().length > 0) !== "") {
+        if (tempCategory.name.trim(" ").length > 0) {
             handleClose();
             const newCategory = await addCategory(tempCategory);
             expense.category = newCategory;
             await updateExpense(expense);
             setSelectedCategory(newCategory);
+        } else {
+            setInputError(true);
         }
     }
 
@@ -56,8 +64,20 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
 
     return (
         <div style={{ width: '250px', padding: 5 }}>
-            <Stack direction={'row'} spacing={2}>
-                <Input inputProps={{ maxLength: 16, style: { fontSize: 13 } }} value={tempCategory.name} onChange={handleInputChange}></Input>
+            <Stack direction={'row'} spacing={2} margin={1}>
+                <TextField
+                    label="Category"
+                    variant="filled"
+                    value={tempCategory.name}
+                    onChange={handleInputChange}
+                    onFocus={handleInputFocus}
+                    error={inputError}
+                    helperText={inputError ? "Name the category." : ""}
+                    inputProps={{
+                        maxLength: 16,
+                        style: { fontSize: 13 }
+                    }}
+                />
                 <Button variant="contained" onClick={handleAddButtonClick}>+</Button>
             </Stack>
             <div style={{ margin: 5, marginLeft: 15, display: 'flex', alignItems: 'center' }}>

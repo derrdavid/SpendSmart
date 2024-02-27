@@ -5,30 +5,12 @@ import currencyFormatter from "../utils/currencyFormatter";
 
 export default function BalanceSheet() {
     const [total, setTotal] = useState({});
-    const { filteredExpenses } = useExpenses();
+    const { filteredExpenses, calculateCategorySums } = useExpenses();
 
     useEffect(() => {
-        calcCategorySum();
+        setTotal(calculateCategorySums());
+        // eslint-disable-next-line 
     }, [filteredExpenses]);
-
-    const calcCategorySum = () => {
-        const tempTotal = {};
-
-        filteredExpenses.forEach((item) => {
-            if (item.category !== null) {
-                const categoryName = item.category.name;
-                const categoryPrice = item.price;
-
-                if (!tempTotal.hasOwnProperty(categoryName)) {
-                    tempTotal[categoryName] = 0;
-                }
-
-                tempTotal[categoryName] += categoryPrice;
-            }
-        });
-
-        setTotal(tempTotal);
-    };
 
     const calcTotalSum = () => {
         let totalSum = 0;

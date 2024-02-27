@@ -14,6 +14,14 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
         color: "#AAAAAA"
     });
 
+    useEffect(() => {
+        const newCategory = {
+            name: "",
+            color: randomHex()
+        }
+        setTempCategory(newCategory);
+    }, [])
+
     const randomHex = () => {
         const randomHexColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
         return randomHexColor;
@@ -45,14 +53,6 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
     const handleRemoveCategory = (id) => {
         deleteCategory(id);
     }
-
-    useEffect(() => {
-        const newCategory = {
-            name: "",
-            color: randomHex()
-        }
-        setTempCategory(newCategory);
-    }, [])
 
     return (
         <div style={{ width: '250px', padding: 5 }}>

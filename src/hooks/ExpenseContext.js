@@ -23,7 +23,7 @@ export const ExpenseProvider = ({ children }) => {
         } catch (error) {
             console.error('Error fetching data:', error.message);
         }
-    };    
+    };
 
     const filterExpensesByDate = async (date) => {
         const selectedMonth = new Date(date).getMonth();
@@ -78,8 +78,8 @@ export const ExpenseProvider = ({ children }) => {
             }
             const responseData = await response.json();
 
-            const updatedItems = allExpenses.map(item => item._id === responseData._id ? responseData : item);
-            setAllExpenses(updatedItems);
+            const updatedExpenses = allExpenses.map(item => item._id === responseData._id ? responseData : item);
+            setAllExpenses(updatedExpenses);
 
             return responseData;
         } catch (error) {
@@ -87,10 +87,10 @@ export const ExpenseProvider = ({ children }) => {
         }
     };
 
-    const deleteExpenses = async (selectedItems) => {
-        if (selectedItems.length > 0) {
+    const deleteExpenses = async (selectedExpenses) => {
+        if (selectedExpenses.length > 0) {
             const jsonBody = {
-                ids: selectedItems
+                ids: selectedExpenses
             };
             try {
                 const response = await fetch(url, {
@@ -101,12 +101,12 @@ export const ExpenseProvider = ({ children }) => {
                     body: JSON.stringify(jsonBody)
                 });
 
-                const updatedItems = allExpenses.filter(item => {
-                    const isSelected = selectedItems.some(selectedItem => selectedItem._id === item._id);
+                const updatedExpenses = allExpenses.filter(item => {
+                    const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
                     return !isSelected;
                 });
 
-                setAllExpenses(updatedItems);
+                setAllExpenses(updatedExpenses);
 
                 if (!response.ok) {
                     throw new Error('Failed to delete an expense.');
@@ -117,11 +117,32 @@ export const ExpenseProvider = ({ children }) => {
         }
     }
 
+    /**
+    * Calculates the total expenses for each category from filteredExpenses.
+    */
+    const calculateCategorySums = () => {
+        const categorySums = {};
+
+        filteredExpenses.forEach((expense) => {
+            const categoryName = expense.category?.name;
+            const categoryPrice = expense.price;
+
+            if (categoryName) {
+                if (!categorySums.hasOwnProperty(categoryName)) {
+                    categorySums[categoryName] = 0;
+                }
+                categorySums[categoryName] += categoryPrice;
+            }
+        });
+
+        return categorySums;
+    };
+
     return (
         <ExpenseContext.Provider value={{
             allExpenses, setAllExpenses, filterExpensesByDate,
             addExpense, updateExpense, deleteExpenses, fetchExpenses,
-            filteredExpenses, setFilteredExpenses
+            filteredExpenses, setFilteredExpenses, calculateCategorySums
         }}>
             {children}
         </ExpenseContext.Provider>

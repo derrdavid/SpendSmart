@@ -14,8 +14,8 @@ export default function ExpensesList({ date }) {
 
     useEffect(() => {
         filterExpensesByDate(date);
+        // eslint-disable-next-line 
     }, [date, allExpenses]);
-
 
     const handleAddExpense = () => {
         addExpense(date);
@@ -35,7 +35,6 @@ export default function ExpensesList({ date }) {
     const handleDeleteExpenses = () => {
         deleteExpenses(selectedItems);
     }
-
 
     return (
         <div style={{

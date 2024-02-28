@@ -1,4 +1,3 @@
-import { Stack } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 
 export const SavingsLineChart = () => {
@@ -17,7 +16,8 @@ export const SavingsLineChart = () => {
                         data: [2, 5, 6.5, 3, 8, 10, 9.5, 2.5, 6, 10, 8],
                     }
                 ]}
-                height={300}
+                width={500}
+                height={250}
             />
         </div>
     );

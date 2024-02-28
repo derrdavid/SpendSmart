@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useCategories } from "../hooks/CategoryContext";
 import { useExpenses } from "../hooks/ExpenseContext";
 import currencyFormatter from "../utils/currencyFormatter";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 
-export const SavingsChart = () => {
+export const ExpensesBarChart = (date) => {
     const [chartData, setChartData] = useState([]);
     const { categories } = useCategories();
     const { allExpenses } = useExpenses();
@@ -12,7 +13,7 @@ export const SavingsChart = () => {
     useEffect(() => {
         loadChartData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allExpenses]);
+    }, [allExpenses, date.date.$d.getFullYear()]);
 
     const loadChartData = async () => {
         try {
@@ -22,7 +23,8 @@ export const SavingsChart = () => {
                 const categoryData = [];
                 for (let i = 0; i < 12; i++) {
                     const filteredData = allExpenses.filter(expense =>
-                        expense.category && expense.category._id === category._id && new Date(expense.date).getMonth() === i
+                        expense.category && expense.category._id === category._id
+                        && new Date(expense.date).getMonth() === i && new Date(expense.date).getFullYear() === date.date.$d.getFullYear()
                     );
                     let sum = 0;
                     filteredData.forEach(expense => {
@@ -65,21 +67,29 @@ export const SavingsChart = () => {
 
 
     return (
-        <div style={{
-            height: '100%', backgroundColor: '#F4F4F2', borderRadius: '2em', boxShadow: 1
-
+        <Card sx={{
+            height: '100%',
+            boxShadow: 0,
+            backgroundColor: '#F4F4F2',
+            borderRadius: '2em',
         }}>
-            <BarChart
-                slotProps={{
-                    legend: {
-                        hidden: true
-                    }
-                }}
-                xAxis={[{ data: xLabels, scaleType: 'band' }]}
-                series={chartData}
-                width={500}
-                height={250}>
-            </BarChart>
-        </div >
+            <CardContent>
+                <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
+                    Expenses {date.date.$d.getFullYear()} 
+                </Typography>
+
+                <BarChart
+                    slotProps={{
+                        legend: {
+                            hidden: true
+                        }
+                    }}
+                    xAxis={[{ data: xLabels, scaleType: 'band' }]}
+                    series={chartData}
+                    width={500}
+                    height={250}>
+                </BarChart>
+            </CardContent>
+        </Card >
     );
 }

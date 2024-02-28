@@ -24,13 +24,17 @@ export default function BudgetCard(date) {
         setEditable(false);
     };
 
+    const handlePressEnter = (e) => {
+        if (e.key === 'Enter') { setEditable(false) }
+    }
+
     return (
         <Card
             sx={{
                 cursor: 'pointer',
                 width: 300,
                 height: 100,
-                padding: 2,
+                padding: 1,
                 boxShadow: 0,
                 backgroundColor: '#F4F4F2',
                 border: 1.5,
@@ -56,6 +60,7 @@ export default function BudgetCard(date) {
                             }}
                             value={budget}
                             onChange={handleInputChange}
+                            onKeyUp={handlePressEnter}
                             onBlur={handleInputBlur}
                             autoFocus
                         />

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Stack } from '@mui/material';
+import { Button, Fade, Stack } from '@mui/material';
 import { useExpenses } from '../hooks/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
 import { CategoryBadge } from './CategoryBadge/CategoryBadge';

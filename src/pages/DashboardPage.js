@@ -6,7 +6,7 @@ import BudgetCard from '../components/BudgetCard';
 import MonthSelection from '../components/MonthSelection';
 import { ExpenseProvider } from '../hooks/ExpenseContext';
 import { CategoryProvider } from '../hooks/CategoryContext';
-import { SavingsChart } from '../components/SavingsChart';
+import { ExpensesBarChart } from '../components/ExpensesBarChart';
 import { SavingsLineChart } from '../components/SavingsLineChart';
 
 export default function DashboardPage() {
@@ -36,7 +36,7 @@ export default function DashboardPage() {
                         <Stack direction='row' spacing={2}>
                             <BudgetCard date={date}></BudgetCard>
                         </Stack>
-                        <SavingsChart />
+                        <ExpensesBarChart date={date}/>
                         <SavingsLineChart></SavingsLineChart>
                     </Stack>
                 </Container>

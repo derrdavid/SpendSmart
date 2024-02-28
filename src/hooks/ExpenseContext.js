@@ -26,11 +26,14 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const filterExpensesByDate = async (date) => {
-        const selectedMonth = new Date(date).getMonth();
+        const selectedDate = new Date(date);
+
         const filteredExpenses = allExpenses.filter((expense) => {
-            const expenseMonth = new Date(expense.date).getMonth();
-            return expenseMonth === selectedMonth;
+            const expenseDate = new Date(expense.date);
+            return (expenseDate.getYear() === selectedDate.getYear())
+                && (expenseDate.getMonth() === selectedDate.getMonth());
         });
+
         setFilteredExpenses([...filteredExpenses]);
     }
 

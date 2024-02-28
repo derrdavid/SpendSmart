@@ -47,7 +47,6 @@ export default function ExpensesList({ date }) {
                     width: '100%',
                     backgroundColor: '#F4F4F2',
                     borderRadius: 5,
-                    boxShadow: 1
                 }}
                 initialState={{
                     pagination: { paginationModel: { pageSize: 10 } },

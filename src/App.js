@@ -1,4 +1,4 @@
-import { ThemeProvider, createTheme } from '@mui/material';
+import { Container, ThemeProvider, createTheme } from '@mui/material';
 import DashboardPage from './pages/DashboardPage';
 import DashboardDrawer from './components/DashboardDrawer';
 import DashboardFooter from './components/DashboardFooter';
@@ -15,16 +15,13 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ display: 'flex', height: '90vh' }}>
         <DashboardDrawer />
-        <div style={{
-          width: '100%',
+        <Container style={{
           justifyContent: 'center'
         }}>
           <DashboardPage></DashboardPage>
-        </div>
+        </Container>
         <DashboardFooter />
-      </div>
     </ThemeProvider >
   );
 }

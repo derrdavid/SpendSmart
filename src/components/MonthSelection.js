@@ -17,6 +17,9 @@ export default function MonthSelection({ date, setDate }) {
                     setOpen(false);
                     setDate(newDate);
                 }}
+                sx={{
+                    backgroundColor: '#F4F4F2',
+                }}
                 slotProps={{
                     textField: {
                         onClick: () => setOpen(true),
@@ -25,7 +28,8 @@ export default function MonthSelection({ date, setDate }) {
                             onMouseDown: (e) => e.preventDefault(),
                             readOnly: true,
                             style: {
-                                textAlign: 'center'
+                                textAlign: 'center',
+                                cursor: 'pointer'
                             }
                         }
                     },

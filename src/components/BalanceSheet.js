@@ -1,71 +1,20 @@
-import { Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from "@mui/material";
-import { useExpenses } from "../hooks/ExpenseContext";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import currencyFormatter from "../utils/currencyFormatter";
 
-export default function BalanceSheet() {
-    const [total, setTotal] = useState({});
-    const { filteredExpenses, calculateCategorySums } = useExpenses();
-
-    useEffect(() => {
-        setTotal(calculateCategorySums());
-        // eslint-disable-next-line 
-    }, [filteredExpenses]);
-
-    const calcTotalSum = () => {
-        let totalSum = 0;
-
-        filteredExpenses.forEach((item) => {
-            totalSum += item.price;
-        });
-
-        return totalSum;
-    };
-
+export default function BalanceSheet(date) {
     return (
-        <div style={{
-            height: '100%',
-        }}>
-            <TableContainer sx={{
-                backgroundColor: '#F4F4F2',
-                borderRadius: 5,
-                boxShadow: 1
-            }}>
-                <Table stickyHeader>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Category</TableCell>
-                            <TableCell>Value</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody height={200}>
-                        {
-                            Object.entries(total).map(([name, sum], i) => {
-                                return (
-                                    <TableRow key={i}>
-                                        <TableCell size="small">{name}</TableCell>
-                                        <TableCell size="small">{new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(
-                                            sum
-                                        )}</TableCell>
-                                    </TableRow>
-                                );
-                            })
-                        }
-                    </TableBody>
-
-                    <TableFooter style={{
-                        position: 'sticky',
-                        bottom: 0
-                    }}>
-                        <TableRow>
-                            <TableCell></TableCell>
-                            <TableCell>{
-                                currencyFormatter(calcTotalSum())
-                            }</TableCell>
-                        </TableRow>
-                    </TableFooter>
-                </Table>
-            </TableContainer>
-        </div >
+        <Card sx={{ boxShadow: 0, backgroundColor: '#F4F4F2', borderRadius: 5, }}>
+            <CardContent sx={{padding: 3}}>
+                <Stack orientation="column" spacing={1}>
+                    <Typography variant="h8" fontWeight={400} color="#00000040" >
+                        Month Budget
+                    </Typography>
+                    <Typography variant="h4" fontWeight={600}>
+                        100€
+                    </Typography>
+                </Stack>
+            </CardContent>
+        </Card>
     );
 }

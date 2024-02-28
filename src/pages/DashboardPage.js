@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Divider, Stack } from '@mui/material';
+import { Container, Divider, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import ExpensesList from '../components/ExpensesList';
 import BalanceSheet from '../components/BalanceSheet';
@@ -15,7 +15,7 @@ export default function DashboardPage() {
     return (
         <ExpenseProvider>
             <CategoryProvider>
-                <div style={{
+                <Container style={{
                     maxHeight: '80vh',
                     justifyContent: 'space-around',
                     alignItems: 'flex-start',
@@ -32,16 +32,12 @@ export default function DashboardPage() {
                     </Stack>
                     <Divider orientation="vertical" flexItem />
                     <Stack direction='column' spacing={4} divider={<Divider orientation="horizontal" flexItem />}>
-                        <BalanceSheet />
-                    </Stack>
-                    <Divider orientation="vertical" flexItem />
-                    <Stack direction='column' spacing={4} divider={<Divider orientation="horizontal" flexItem />}>
+                        <BalanceSheet></BalanceSheet>
                         <SavingsChart />
-                        <SavingsLineChart />
                     </Stack>
-                </div>
+                </Container>
             </CategoryProvider>
-        </ExpenseProvider>
+        </ExpenseProvider >
     );
 
 }

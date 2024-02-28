@@ -138,11 +138,24 @@ export const ExpenseProvider = ({ children }) => {
         return categorySums;
     };
 
+    /**
+   * Calculates the total expenses from filteredExpenses.
+   */
+    const calculateTotalSum = () => {
+        let totalSum = 0;
+
+        filteredExpenses.forEach((item) => {
+            totalSum += item.price;
+        });
+
+        return totalSum;
+    };
+
     return (
         <ExpenseContext.Provider value={{
             allExpenses, setAllExpenses, filterExpensesByDate,
             addExpense, updateExpense, deleteExpenses, fetchExpenses,
-            filteredExpenses, setFilteredExpenses, calculateCategorySums
+            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum
         }}>
             {children}
         </ExpenseContext.Provider>

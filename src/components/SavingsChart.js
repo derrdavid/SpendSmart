@@ -78,7 +78,7 @@ export const SavingsChart = () => {
                 xAxis={[{ data: xLabels, scaleType: 'band' }]}
                 series={chartData}
                 width={600}
-                height={350}>
+                height={300}>
             </BarChart>
         </div >
     );

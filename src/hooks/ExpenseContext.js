@@ -6,6 +6,7 @@ export const ExpenseProvider = ({ children }) => {
     const url = "http://localhost:3002/expenses/";
     const [allExpenses, setAllExpenses] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
+    const [sumsPerMonth, setSumsPerMonth] = useState(new Array(12).fill(0));
 
     useEffect(() => {
         fetchExpenses();
@@ -140,6 +141,10 @@ export const ExpenseProvider = ({ children }) => {
 
         return categorySums;
     };
+
+    const calculateSumsPerMonth = () => {
+        
+    }
 
     /**
    * Calculates the total expenses from filteredExpenses.

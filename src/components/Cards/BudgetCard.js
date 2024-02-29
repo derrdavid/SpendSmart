@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Stack, Typography, TextField, Input } from '@mui/material';
-import monthToString from '../utils/dateFormatter';
-import currencyFormatter from '../utils/currencyFormatter';
+import monthToString from '../../utils/dateFormatter';
+import currencyFormatter from '../../utils/currencyFormatter';
 
 export default function BudgetCard(date) {
     const [editable, setEditable] = useState(false);
@@ -45,7 +45,7 @@ export default function BudgetCard(date) {
         >
             <CardContent onMouseOver={() => { setHover(true) }}
                 onMouseLeave={() => { setHover(false) }}>
-                <Stack orientation="column" spacing={1}>
+                <Stack orientation="column" spacing={'0.5vh'}>
                     <Typography variant="h8" fontWeight={400} color="#00000040">
                         Budget {monthToString(date)}
                     </Typography>

@@ -14,6 +14,11 @@ export const SavingsLineChart = () => {
                         color: 'black',
                         curve: 'linear',
                         data: [2, 5, 6.5, 3, 8, 10, 9.5, 2.5, 6, 10, 8],
+                    },
+                    {
+                        color: 'blue',
+                        curve: 'linear',
+                        data: [0, 5, 6.5, 3, 8, 10, 9.5, 2.5, 6, 10, 8],
                     }
                 ]}
                 width={500}

@@ -68,7 +68,7 @@ export const ExpensesBarChart = (date) => {
 
     return (
         <Card sx={{
-            height: '100%',
+            height: '30vh',
             boxShadow: 0,
             backgroundColor: '#F4F4F2',
             borderRadius: '2em',
@@ -86,7 +86,7 @@ export const ExpensesBarChart = (date) => {
                     }}
                     xAxis={[{ data: xLabels, scaleType: 'band' }]}
                     series={chartData}
-                    width={500}
+                    width={700}
                     height={250}>
                 </BarChart>
             </CardContent>

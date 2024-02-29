@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Card, Container, Divider, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import ExpensesList from '../components/ExpensesList';
-import BudgetCard from '../components/BudgetCard';
+import BudgetCard from '../components/Cards/BudgetCard';
 import MonthSelection from '../components/MonthSelection';
 import { ExpenseProvider } from '../hooks/ExpenseContext';
 import { CategoryProvider } from '../hooks/CategoryContext';
 import { ExpensesBarChart } from '../components/ExpensesBarChart';
 import { SavingsLineChart } from '../components/SavingsLineChart';
+import BalanceCard from '../components/Cards/BalanceCard';
 
 export default function DashboardPage() {
     const [date, setDate] = useState(dayjs());
@@ -35,6 +36,7 @@ export default function DashboardPage() {
                     <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                         <Stack direction='row' spacing={2}>
                             <BudgetCard date={date}></BudgetCard>
+                            <BalanceCard></BalanceCard>
                         </Stack>
                         <ExpensesBarChart date={date}/>
                         <SavingsLineChart></SavingsLineChart>

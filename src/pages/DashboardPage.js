@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Container, Divider, Stack } from '@mui/material';
+import { Container, Divider, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import ExpensesList from '../components/ExpensesList';
 import BudgetCard from '../components/Cards/BudgetCard';
@@ -9,39 +9,40 @@ import { CategoryProvider } from '../hooks/CategoryContext';
 import { ExpensesBarChart } from '../components/ExpensesBarChart';
 import { SavingsLineChart } from '../components/SavingsLineChart';
 import BalanceCard from '../components/Cards/BalanceCard';
+import { BudgetProvider } from '../hooks/BudgetContext';
 
 export default function DashboardPage() {
     const [date, setDate] = useState(dayjs());
 
     return (
-        <ExpenseProvider>
+        <ExpenseProvider date={date}>
             <CategoryProvider>
-                <Container style={{
-                    maxHeight: '80vh',
-                    width: '100vh',
-                    justifyContent: 'space-around',
-                    alignItems: 'flex-start',
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    alignItems: 'flex-start',
-                    margin: '5em',
-                    gap: '2em'
-                }}>
-                    <Stack spacing={2}>
-                        <MonthSelection date={date} setDate={setDate} />
-                        <Divider orientation="horizontal" flexItem />
-                        <ExpensesList date={date} style={{ flex: '1' }} />
-                    </Stack>
-                    <Divider orientation="vertical" flexItem />
-                    <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-                        <Stack direction='row' spacing={2}>
-                            <BudgetCard date={date}></BudgetCard>
-                            <BalanceCard></BalanceCard>
+                <BudgetProvider date={date}>
+                    <Container style={{
+                        maxHeight: '80vh',
+                        width: '100vh',
+                        justifyContent: 'space-around',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        margin: '5em',
+                        gap: '2em'
+                    }}>
+                        <Stack spacing={2}>
+                            <MonthSelection date={date} setDate={setDate} />
+                            <Divider orientation="horizontal" flexItem />
+                            <ExpensesList date={date} style={{ flex: '1' }} />
                         </Stack>
-                        <ExpensesBarChart date={date}/>
-                        <SavingsLineChart></SavingsLineChart>
-                    </Stack>
-                </Container>
+                        <Divider orientation="vertical" flexItem />
+                        <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
+                            <Stack direction='row' spacing={2}>
+                                <BudgetCard date={date}></BudgetCard>
+                                <BalanceCard></BalanceCard>
+                            </Stack>
+                            <ExpensesBarChart date={date} />
+                            <SavingsLineChart></SavingsLineChart>
+                        </Stack>
+                    </Container>
+                </BudgetProvider>
             </CategoryProvider>
         </ExpenseProvider >
     );

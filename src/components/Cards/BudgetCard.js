@@ -2,30 +2,61 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Stack, Typography, TextField, Input } from '@mui/material';
 import monthToString from '../../utils/dateFormatter';
 import currencyFormatter from '../../utils/currencyFormatter';
+import { useBudgets } from '../../hooks/BudgetContext';
 
 export default function BudgetCard(date) {
+    const { budgets, updateBudget, addBudget } = useBudgets();
     const [editable, setEditable] = useState(false);
     const [hover, setHover] = useState(false);
-    const [budget, setBudget] = useState(0);
+    const [budget, setBudget] = useState({});
 
     useEffect(() => {
-
-    }, [])
+        const month = date.date.$M;
+        const monthBudget = budgets[month];
+        console.log(budgets)
+        if (monthBudget != null) {
+            setBudget({ ...monthBudget });
+        } else {
+            setBudget({
+                amount: 0,
+                date: new Date(date.date.$d.getFullYear(), date.date.$M + 1, 1, 0, 0, 0, 0)
+            })
+        }
+    }, [date, budgets])
 
     const handleCardClick = () => {
         setEditable(true);
     };
 
     const handleInputChange = (e) => {
-        setBudget(e.target.value);
+        setBudget(prevBudget => ({
+            ...prevBudget,
+            amount: e.target.value
+        }));
     };
 
-    const handleInputBlur = () => {
+    const handleInputBlur = async (e) => {
+        addOrCreateBudget();
         setEditable(false);
     };
 
     const handlePressEnter = (e) => {
-        if (e.key === 'Enter') { setEditable(false) }
+        if (e.key === 'Enter') {
+            addOrCreateBudget();
+            setEditable(false);
+        }
+    }
+
+    const addOrCreateBudget = async () => {
+        let newBudget;
+        setEditable(false);
+        if (budget._id == null) {
+            newBudget = await addBudget(budget);
+        } else {
+            console.log(budget);
+            newBudget = await updateBudget(budget);
+        }
+        setBudget(newBudget);
     }
 
     return (
@@ -58,7 +89,7 @@ export default function BudgetCard(date) {
                                 variant: "h4",
                                 fontWeight: 600
                             }}
-                            value={budget}
+                            value={budget.amount}
                             onChange={handleInputChange}
                             onKeyUp={handlePressEnter}
                             onBlur={handleInputBlur}
@@ -66,7 +97,7 @@ export default function BudgetCard(date) {
                         />
                     ) : (
                         <Typography fontSize={40} fontWeight={600}>
-                            {currencyFormatter(budget)}
+                            {currencyFormatter(budget.amount)}
                         </Typography>
                     )}
                 </Stack>

@@ -8,7 +8,7 @@ import { ExpenseProvider } from '../hooks/ExpenseContext';
 import { CategoryProvider } from '../hooks/CategoryContext';
 import { ExpensesBarChart } from '../components/ExpensesBarChart';
 import { SavingsLineChart } from '../components/SavingsLineChart';
-import BalanceCard from '../components/Cards/BalanceCard';
+import BalanceCards from '../components/Cards/BalanceCards';
 import { BudgetProvider } from '../hooks/BudgetContext';
 
 export default function DashboardPage() {
@@ -36,7 +36,7 @@ export default function DashboardPage() {
                         <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                             <Stack direction='row' spacing={2}>
                                 <BudgetCard date={date}></BudgetCard>
-                                <BalanceCard></BalanceCard>
+                                <BalanceCards date={date}></BalanceCards>
                             </Stack>
                             <ExpensesBarChart date={date} />
                             <SavingsLineChart></SavingsLineChart>

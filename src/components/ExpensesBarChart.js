@@ -72,12 +72,19 @@ export const ExpensesBarChart = (date) => {
             backgroundColor: '#F4F4F2',
             borderRadius: '2em',
         }}>
-            <CardContent>
+            <CardContent
+                sx={{
+                    height: '30vh',
+                    width: '100%'
+                }}>
                 <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
                     Expenses {date.date.$d.getFullYear()}
                 </Typography>
 
                 <BarChart
+                    sx={{
+                        mt: -5
+                    }}
                     slotProps={{
                         legend: {
                             hidden: true
@@ -85,8 +92,7 @@ export const ExpensesBarChart = (date) => {
                     }}
                     xAxis={[{ data: xLabels, scaleType: 'band' }]}
                     series={chartData}
-                    width={700}
-                    height={250}>
+                >
                 </BarChart>
             </CardContent>
         </Card >

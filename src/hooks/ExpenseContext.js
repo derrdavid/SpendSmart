@@ -2,20 +2,21 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 
 const ExpenseContext = createContext();
 
-export const ExpenseProvider = ({ children }) => {
+export const ExpenseProvider = ({ children, date }) => {
     const url = "http://localhost:3002/expenses/";
     const [allExpenses, setAllExpenses] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [sumsPerMonth, setSumsPerMonth] = useState(new Array(12).fill(0));
 
     useEffect(() => {
-        fetchExpenses();
+        fetchExpensesByYear(date);
         // eslint-disable-next-line
-    }, []);
+    }, [date.$d.getFullYear()]);
 
-    const fetchExpenses = async () => {
+    const fetchExpensesByYear = async (date) => {
+        const year = new Date(date).getFullYear();
         try {
-            const response = await fetch(url);
+            const response = await fetch(`${url}${year}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
@@ -143,7 +144,7 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const calculateSumsPerMonth = () => {
-        
+
     }
 
     /**
@@ -162,7 +163,7 @@ export const ExpenseProvider = ({ children }) => {
     return (
         <ExpenseContext.Provider value={{
             allExpenses, setAllExpenses, filterExpensesByDate,
-            addExpense, updateExpense, deleteExpenses, fetchExpenses,
+            addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
             filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum
         }}>
             {children}

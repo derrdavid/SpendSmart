@@ -3,7 +3,7 @@ import React from "react";
 
 export const CategoryBadge = ({ category }) => {
 
-    if (category == null || category.color == "") {
+    if (category === null || category.color === "") {
         category = {
             name: "none",
             color: "#AAAAAA"

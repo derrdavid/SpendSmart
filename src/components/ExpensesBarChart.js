@@ -24,8 +24,7 @@ export const ExpensesBarChart = (date) => {
                 for (let i = 0; i < 12; i++) {
                     const filteredData = allExpenses.filter(expense =>
                         expense.category && expense.category._id === category._id
-                        && new Date(expense.date).getMonth() === i && new Date(expense.date).getFullYear() === date.date.$d.getFullYear()
-                    );
+                        && new Date(expense.date).getMonth() === i);
                     let sum = 0;
                     filteredData.forEach(expense => {
                         sum += expense.price;
@@ -75,7 +74,7 @@ export const ExpensesBarChart = (date) => {
         }}>
             <CardContent>
                 <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
-                    Expenses {date.date.$d.getFullYear()} 
+                    Expenses {date.date.$d.getFullYear()}
                 </Typography>
 
                 <BarChart

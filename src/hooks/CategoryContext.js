@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
-    const url = "http://localhost:3002/categories/";
+    const url = `${process.env.REACT_APP_URL}/categories/`;
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const CategoryProvider = ({ children }) => {
             if (!response.ok) {
                 throw new Error('Fehler beim Abrufen der Categories.');
             }
-            
+
             const responseData = await response.json();
             setCategories([...responseData]);
         } catch (error) {
@@ -30,12 +30,12 @@ export const CategoryProvider = ({ children }) => {
             name: input.name,
             color: input.color
         };
-    
+
         try {
             if (categories.length >= 10) {
                 throw new Error("Maximum number of categories reached.");
             }
-            
+
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -43,19 +43,19 @@ export const CategoryProvider = ({ children }) => {
                 },
                 body: JSON.stringify(newCategory)
             });
-    
+
             if (!response.ok) {
                 throw new Error("Failed to create a new category.");
             }
-    
+
             const responseData = await response.json();
             setCategories((prevCategories) => [...prevCategories, responseData]);
-            
+
             return responseData;
         } catch (error) {
             console.error('Error creating a new category:', error);
         }
-    };    
+    };
 
     const deleteCategory = async (id) => {
         try {

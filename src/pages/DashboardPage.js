@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Divider, Stack } from '@mui/material';
+import { Card, CardContent, Container, Divider, Stack } from '@mui/material';
 import dayjs from 'dayjs';
 import ExpensesList from '../components/ExpensesList';
 import BudgetCard from '../components/Cards/BudgetCard';
@@ -39,7 +39,21 @@ export default function DashboardPage() {
                                 <BalanceCards date={date}></BalanceCards>
                             </Stack>
                             <ExpensesBarChart date={date} />
-                            <SavingsLineChart date={date}></SavingsLineChart>
+                            <Stack direction='row' spacing={2}>
+                                <SavingsLineChart date={date}></SavingsLineChart>
+                                <Stack direction='column' spacing={2}>
+                                    <Card>
+                                        <CardContent>
+                                            <h1>avg</h1>
+                                        </CardContent>
+                                    </Card>
+                                    <Card>
+                                        <CardContent>
+                                            <h1>total</h1>
+                                        </CardContent>
+                                    </Card>
+                                </Stack>
+                            </Stack>
                         </Stack>
                     </Container>
                 </BudgetProvider>

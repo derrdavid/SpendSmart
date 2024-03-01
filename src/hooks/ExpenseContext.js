@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children, date }) => {
-    const url = "http://localhost:3002/expenses/";
+    const url = `${process.env.REACT_APP_URL}/expenses/`;
     const [allExpenses, setAllExpenses] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [sumsPerMonth, setSumsPerMonth] = useState(new Array(12).fill(0));

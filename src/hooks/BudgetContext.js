@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react"
 const BudgetContext = createContext();
 
 export const BudgetProvider = ({ children, date }) => {
-    const url = "http://localhost:3002/budgets/";
+    const url = `${process.env.REACT_APP_URL}/budgets/`;
     const [budgets, setBudgets] = useState(new Array(12));
     let year = date.$d.getFullYear();
 

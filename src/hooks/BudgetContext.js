@@ -94,8 +94,19 @@ export const BudgetProvider = ({ children, date }) => {
         }
     };
 
+    const getAmounts = () => {
+        const amounts = new Array(12).fill(0);
+
+        budgets.forEach((item) => {
+            const month = new Date(item.date).getMonth() - 1;
+            amounts[month] = item.amount;
+        })
+
+        return amounts;
+    }
+
     return (
-        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget }}>
+        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget, getAmounts }}>
             {children}
         </BudgetContext.Provider>
     );

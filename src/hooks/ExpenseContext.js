@@ -144,13 +144,20 @@ export const ExpenseProvider = ({ children, date }) => {
     };
 
     const calculateSumsPerMonth = () => {
+        let sums = new Array(12).fill(0);
 
+        allExpenses.forEach((item) => {
+            const month = new Date(item.date).getMonth();
+            sums[month] += item.price;
+        })
+        return sums;
     }
+
 
     /**
    * Calculates the total expenses from filteredExpenses.
    */
-    const calculateTotalSum = () => {
+    const calculateFilteredTotalSum = () => {
         let totalSum = 0;
 
         filteredExpenses.forEach((item) => {
@@ -164,7 +171,8 @@ export const ExpenseProvider = ({ children, date }) => {
         <ExpenseContext.Provider value={{
             allExpenses, setAllExpenses, filterExpensesByDate,
             addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
-            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum
+            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum: calculateFilteredTotalSum,
+            calculateSumsPerMonth
         }}>
             {children}
         </ExpenseContext.Provider>

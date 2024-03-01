@@ -63,9 +63,9 @@ export default function ExpensesList({ date }) {
                     setSelectedItems(selected);
                 }}
                 columns={[
-                    { field: 'name', headerName: 'name', width: 150, editable: true },
+                    { field: 'name', headerName: 'Name', width: 150, editable: true },
                     {
-                        field: 'category', headerName: 'category', width: 200, editable: true,
+                        field: 'category', headerName: 'Category', width: 200, editable: true,
                         renderCell: (params) => <CategoryBadge category={params.row.category} />,
                         renderEditCell: (params) => {
                             return (
@@ -74,7 +74,7 @@ export default function ExpensesList({ date }) {
                         }
                     },
                     {
-                        field: 'price', headerName: 'price', type: 'number', width: 100, editable: true, valueFormatter: (params) => {
+                        field: 'price', headerName: 'Price', type: 'number', width: 100, editable: true, valueFormatter: (params) => {
                             return currencyFormatter(params.value);
                         }
                     },

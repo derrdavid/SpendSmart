@@ -39,7 +39,7 @@ export default function DashboardPage() {
                                 <BalanceCards date={date}></BalanceCards>
                             </Stack>
                             <ExpensesBarChart date={date} />
-                            <SavingsLineChart></SavingsLineChart>
+                            <SavingsLineChart date={date}></SavingsLineChart>
                         </Stack>
                     </Container>
                 </BudgetProvider>

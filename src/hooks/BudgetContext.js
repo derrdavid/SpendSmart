@@ -5,13 +5,13 @@ const BudgetContext = createContext();
 export const BudgetProvider = ({ children, date }) => {
     const url = "http://localhost:3002/budgets/";
     const [budgets, setBudgets] = useState(new Array(12));
+    let year = date.$d.getFullYear();
 
     useEffect(() => {
-        fetchBudgetsByYear(new Date());
-    }, [date.$d.getFullYear()]);
+        fetchBudgetsByYear(year);
+    }, [year]);
 
-    const fetchBudgetsByYear = async (date) => {
-        const year = new Date(date).getFullYear();
+    const fetchBudgetsByYear = async (year) => {
         try {
             const response = await fetch(`${url}${year}`);
             if (!response.ok) {
@@ -19,7 +19,7 @@ export const BudgetProvider = ({ children, date }) => {
             }
             const responseData = await response.json();
 
-            const updatedBudgets = [...budgets]; // Kopiere das vorhandene budgets Array
+            const updatedBudgets = new Array(12); // Kopiere das vorhandene budgets Array
 
             responseData.forEach(item => {
                 const month = new Date(item.date).getMonth();
@@ -95,7 +95,7 @@ export const BudgetProvider = ({ children, date }) => {
     };
 
     return (
-        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget, updateBudget }}>
+        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget }}>
             {children}
         </BudgetContext.Provider>
     );

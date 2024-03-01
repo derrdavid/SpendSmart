@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Stack, Typography, TextField, Input } from '@mui/material';
+import { Card, CardContent, Stack, Typography, Input } from '@mui/material';
 import monthToString from '../../utils/dateFormatter';
 import currencyFormatter from '../../utils/currencyFormatter';
 import { useBudgets } from '../../hooks/BudgetContext';
@@ -13,7 +13,6 @@ export default function BudgetCard(date) {
     useEffect(() => {
         const month = date.date.$M;
         const monthBudget = budgets[month];
-        console.log(budgets)
         if (monthBudget != null) {
             setBudget({ ...monthBudget });
         } else {
@@ -53,7 +52,6 @@ export default function BudgetCard(date) {
         if (budget._id == null) {
             newBudget = await addBudget(budget);
         } else {
-            console.log(budget);
             newBudget = await updateBudget(budget);
         }
         setBudget(newBudget);

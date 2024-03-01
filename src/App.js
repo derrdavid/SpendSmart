@@ -15,13 +15,13 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-        <DashboardDrawer />
-        <Container style={{
-          justifyContent: 'center'
-        }}>
-          <DashboardPage></DashboardPage>
-        </Container>
-        <DashboardFooter />
+      <DashboardDrawer />
+      <Container style={{
+        justifyContent: 'center'
+      }}>
+        <DashboardPage></DashboardPage>
+      </Container>
+      <DashboardFooter />
     </ThemeProvider >
   );
 }

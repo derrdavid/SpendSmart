@@ -2,14 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react"
 
 const BudgetContext = createContext();
 
-export const BudgetProvider = ({ children, date }) => {
+export const BudgetProvider = ({ children }) => {
     const url = `${process.env.REACT_APP_URL}/budgets/`;
     const [budgets, setBudgets] = useState(new Array(12));
-    let year = date.$d.getFullYear();
-
-    useEffect(() => {
-        fetchBudgetsByYear(year);
-    }, [year]);
 
     const fetchBudgetsByYear = async (year) => {
         try {
@@ -107,7 +102,7 @@ export const BudgetProvider = ({ children, date }) => {
     }
 
     return (
-        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget, getAmounts }}>
+        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget, getAmounts, fetchBudgetsByYear }}>
             {children}
         </BudgetContext.Provider>
     );

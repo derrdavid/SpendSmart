@@ -1,8 +1,12 @@
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDate } from '../hooks/DateContext';
+import dayjs from 'dayjs';
 
-export default function MonthSelection({ date, setDate }) {
+export default function MonthSelection() {
+    const { date, setDate } = useDate();
+
     const [open, setOpen] = useState(false);
 
     return (

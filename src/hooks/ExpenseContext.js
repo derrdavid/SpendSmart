@@ -1,33 +1,31 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useDate } from './DateContext';
 
 const ExpenseContext = createContext();
 
-export const ExpenseProvider = ({ children, date }) => {
+export const ExpenseProvider = ({ children }) => {
     const url = `${process.env.REACT_APP_URL}/expenses/`;
+    const [fetched, setFetched] = useState(false);
     const [allExpenses, setAllExpenses] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
     const [sumsPerMonth, setSumsPerMonth] = useState(new Array(12).fill(0));
 
-    useEffect(() => {
-        fetchExpensesByYear(date);
-        // eslint-disable-next-line
-    }, [date.$d.getFullYear()]);
-
     const fetchExpensesByYear = async (date) => {
-        const year = new Date(date).getFullYear();
         try {
-            const response = await fetch(`${url}${year}`);
+            setFetched(false);
+            const response = await fetch(`${url}${date.year()}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
             const responseData = await response.json();
             setAllExpenses([...responseData]);
+            setFetched(true);
         } catch (error) {
             console.error('Error fetching data:', error.message);
         }
     };
 
-    const filterExpensesByDate = async (date) => {
+    const filterExpensesByMonth = async (date) => {
         const selectedDate = new Date(date);
 
         const filteredExpenses = allExpenses.filter((expense) => {
@@ -62,6 +60,7 @@ export const ExpenseProvider = ({ children, date }) => {
 
             const responseData = await response.json();
             setAllExpenses((prev) => [...prev, responseData]);
+            setFilteredExpenses((prev) => [...prev, responseData]);
 
         } catch (error) {
             console.error('Error while adding a new expense:', error);
@@ -111,7 +110,13 @@ export const ExpenseProvider = ({ children, date }) => {
                     return !isSelected;
                 });
 
+                const updatedFilteredExpenses = filteredExpenses.filter(item => {
+                    const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
+                    return !isSelected;
+                });
+
                 setAllExpenses(updatedExpenses);
+                setFilteredExpenses(updatedFilteredExpenses);
 
                 if (!response.ok) {
                     throw new Error('Failed to delete an expense.');
@@ -153,7 +158,6 @@ export const ExpenseProvider = ({ children, date }) => {
         return sums;
     }
 
-
     /**
    * Calculates the total expenses from filteredExpenses.
    */
@@ -169,7 +173,8 @@ export const ExpenseProvider = ({ children, date }) => {
 
     return (
         <ExpenseContext.Provider value={{
-            allExpenses, setAllExpenses, filterExpensesByDate,
+            fetched,
+            allExpenses, setAllExpenses, filterExpensesByMonth,
             addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
             filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum: calculateFilteredTotalSum,
             calculateSumsPerMonth

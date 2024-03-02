@@ -5,17 +5,25 @@ import { DataGrid } from "@mui/x-data-grid";
 import { CategoryBadge } from './CategoryBadge/CategoryBadge';
 import currencyFormatter from '../utils/currencyFormatter';
 import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
+import { useDate } from '../hooks/DateContext';
 
-export default function ExpensesList({ date }) {
-    const { allExpenses, filterExpensesByDate,
-        addExpense, updateExpense, deleteExpenses, filteredExpenses, } = useExpenses();
+export default function ExpensesList() {
+    const { fetched, allExpenses, filterExpensesByMonth,
+        addExpense, updateExpense, deleteExpenses, filteredExpenses, fetchExpenses } = useExpenses();
+
+    const { date, setDate, year, month } = useDate();
 
     const [selectedItems, setSelectedItems] = useState([]);
 
     useEffect(() => {
-        filterExpensesByDate(date);
-        // eslint-disable-next-line 
-    }, [date, allExpenses]);
+        fetchExpenses(date);
+    }, [year]);
+
+    useEffect(() => {
+        if (fetched) {
+            filterExpensesByMonth(date);
+        }
+    }, [month, fetched]);
 
     const handleAddExpense = () => {
         addExpense(date);

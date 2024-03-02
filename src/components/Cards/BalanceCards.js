@@ -3,23 +3,26 @@ import currencyFormatter from "../../utils/currencyFormatter";
 import { useExpenses } from "../../hooks/ExpenseContext";
 import { useBudgets } from "../../hooks/BudgetContext";
 import { useEffect, useState } from "react";
+import { useDate } from "../../hooks/DateContext";
 
-export default function BalanceCards(date) {
+export default function BalanceCards() {
+    const { month } = useDate();
 
-    const { calculateTotalSum } = useExpenses();
+    const { calculateFilteredTotalSum } = useExpenses();
     const { filteredExpenses } = useExpenses();
     const { budgets } = useBudgets();
 
+    const [expenses, setExpenses] = useState(0);
     const [savings, setSavings] = useState(0);
 
-    const month = date.date.$M;
-
     useEffect(() => {
+        const totalExpenses = calculateFilteredTotalSum();
+        setExpenses(totalExpenses);
         const monthBudget = budgets[month];
         if (monthBudget) {
-            setSavings(monthBudget.amount - calculateTotalSum());
+            setSavings(monthBudget.amount - totalExpenses);
         }
-    }, [date, budgets, filteredExpenses]);
+    }, [filteredExpenses, budgets]);
 
     return (
         <Stack direction={'row'} spacing={2}>
@@ -37,7 +40,7 @@ export default function BalanceCards(date) {
                             Expenses
                         </Typography>
                         <Typography fontSize={20} fontWeight={600}>
-                            {currencyFormatter(calculateTotalSum())}
+                            {currencyFormatter(expenses)}
                         </Typography>
                     </Stack>
                 </CardContent>

@@ -83,7 +83,10 @@ export const ExpenseProvider = ({ children }) => {
             const responseData = await response.json();
 
             const updatedExpenses = allExpenses.map(item => item._id === responseData._id ? responseData : item);
+            const updatedFilteredExpenses = filteredExpenses.map(item => item._id === responseData._id ? responseData : item);
+
             setAllExpenses(updatedExpenses);
+            setFilteredExpenses(updatedFilteredExpenses);
 
             return responseData;
         } catch (error) {
@@ -144,7 +147,6 @@ export const ExpenseProvider = ({ children }) => {
                 categorySums[categoryName] += categoryPrice;
             }
         });
-
         return categorySums;
     };
 
@@ -176,7 +178,7 @@ export const ExpenseProvider = ({ children }) => {
             fetched,
             allExpenses, setAllExpenses, filterExpensesByMonth,
             addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
-            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateTotalSum: calculateFilteredTotalSum,
+            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateFilteredTotalSum,
             calculateSumsPerMonth
         }}>
             {children}

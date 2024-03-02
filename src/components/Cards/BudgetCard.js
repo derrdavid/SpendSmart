@@ -3,22 +3,30 @@ import { Card, CardContent, Stack, Typography, Input } from '@mui/material';
 import monthToString from '../../utils/dateFormatter';
 import currencyFormatter from '../../utils/currencyFormatter';
 import { useBudgets } from '../../hooks/BudgetContext';
+import { useDate } from '../../hooks/DateContext';
 
-export default function BudgetCard(date) {
-    const { budgets, updateBudget, addBudget } = useBudgets();
+export default function BudgetCard() {
+
+    const { date, year } = useDate();
+    const { budgets, updateBudget, addBudget, fetchBudgetsByYear } = useBudgets();
+
     const [editable, setEditable] = useState(false);
     const [hover, setHover] = useState(false);
     const [budget, setBudget] = useState({});
 
     useEffect(() => {
-        const month = date.date.$M;
+        fetchBudgetsByYear(year);
+    }, [year])
+
+    useEffect(() => {
+        const month = date.month();
         const monthBudget = budgets[month];
         if (monthBudget != null) {
             setBudget({ ...monthBudget });
         } else {
             setBudget({
                 amount: 0,
-                date: new Date(date.date.$d.getFullYear(), date.date.$M + 1, 1, 0, 0, 0, 0)
+                date: new Date(date.year(), date.month() + 1, 1, 0, 0, 0, 0)
             })
         }
     }, [date, budgets])
@@ -47,6 +55,7 @@ export default function BudgetCard(date) {
     }
 
     const addOrCreateBudget = async () => {
+        console.log(budget)
         let newBudget;
         setEditable(false);
         if (budget._id == null) {
@@ -76,7 +85,7 @@ export default function BudgetCard(date) {
                 onMouseLeave={() => { setHover(false) }}>
                 <Stack orientation="column" spacing={'0.5vh'}>
                     <Typography variant="h8" fontWeight={400} color="#00000040">
-                        Budget {monthToString(date)}
+                        Budget {date.format('MMMM')}
                     </Typography>
                     {editable ? (
                         <Input

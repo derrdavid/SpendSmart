@@ -32,15 +32,15 @@ export default function DashboardPage() {
                                 <Divider orientation="horizontal" flexItem />
                                 <ExpensesList style={{ flex: '1' }} />
                             </Stack>
-                            {/* <Divider orientation="vertical" flexItem />
+                            <Divider orientation="vertical" flexItem />
                             <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                                 <Stack direction='row' spacing={2}>
-                                    <BudgetCard date={date}></BudgetCard>
-                                    <BalanceCards date={date}></BalanceCards>
+                                    <BudgetCard></BudgetCard>
+                                    <BalanceCards></BalanceCards>
                                 </Stack>
-                                <ExpensesBarChart date={date} />
+                                <ExpensesBarChart />
                                 <Stack direction='row' spacing={2}>
-                                    <SavingsLineChart date={date}></SavingsLineChart>
+                                    <SavingsLineChart></SavingsLineChart>
                                     <Stack direction='column' spacing={2}>
                                         <Card>
                                             <CardContent>
@@ -54,7 +54,7 @@ export default function DashboardPage() {
                                         </Card>
                                     </Stack>
                                 </Stack>
-                            </Stack> */}
+                            </Stack>
                         </Container>
                     </BudgetProvider>
                 </CategoryProvider>

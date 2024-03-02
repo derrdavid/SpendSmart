@@ -4,15 +4,17 @@ import { useEffect, useState } from "react";
 import { useExpenses } from "../hooks/ExpenseContext";
 import { useBudgets } from "../hooks/BudgetContext";
 import currencyFormatter from "../utils/currencyFormatter";
+import { useDate } from "../hooks/DateContext";
 
-export const SavingsLineChart = (date) => {
+export const SavingsLineChart = () => {
+
+    const { filteredExpenses, calculateSumsPerMonth } = useExpenses();
+    const { budgets, getAmounts } = useBudgets();
+    const { date, year, month } = useDate();
 
     const [expenseList, setExpenseList] = useState(new Array(12).fill(0));
     const [budgetList, setBudgetList] = useState(new Array(12).fill(0));
     const [savingsList, setSavingsList] = useState(new Array(12).fill(0));
-
-    const { filteredExpenses, calculateSumsPerMonth } = useExpenses();
-    const { budgets, getAmounts } = useBudgets();
 
     useEffect(() => {
         setExpenseList(calculateSumsPerMonth());
@@ -54,15 +56,14 @@ export const SavingsLineChart = (date) => {
         >
             <CardContent sx={{
                 height: '30vh',
-                width: '100%'
+                width: '50vh'
             }}>
                 <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
-                    Savings {date.date.$d.getFullYear()}
+                    Savings {year}
                 </Typography>
                 <LineChart
                     sx={{
-                        mt: -3,
-                        pb: 1
+                        margin: 1
                     }}
                     xAxis={[{ id: 0, data: xLabels, scaleType: 'band' }]}
                     series={[

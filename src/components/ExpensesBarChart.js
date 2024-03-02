@@ -4,16 +4,20 @@ import { useCategories } from "../hooks/CategoryContext";
 import { useExpenses } from "../hooks/ExpenseContext";
 import currencyFormatter from "../utils/currencyFormatter";
 import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { useDate } from "../hooks/DateContext";
 
-export const ExpensesBarChart = (date) => {
-    const [chartData, setChartData] = useState([]);
+export const ExpensesBarChart = () => {
+
+    const { year } = useDate();
     const { categories } = useCategories();
     const { allExpenses } = useExpenses();
+
+    const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         loadChartData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allExpenses, date.date.$d.getFullYear()]);
+    }, [allExpenses, year]);
 
     const loadChartData = async () => {
         try {
@@ -78,7 +82,7 @@ export const ExpensesBarChart = (date) => {
                     width: '100%'
                 }}>
                 <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
-                    Expenses {date.date.$d.getFullYear()}
+                    Expenses {year}
                 </Typography>
 
                 <BarChart

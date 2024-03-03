@@ -1,23 +1,17 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { useDate } from './DateContext';
-
+import apiService from '../services/apiService';
 const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children }) => {
-    const url = `${process.env.REACT_APP_URL}/expenses/`;
+    const collectionName = 'expenses';
 
     const [fetched, setFetched] = useState(false);
     const [expenses, setExpenses] = useState([]);
     const [monthlyExpenses, setMonthlyExpenses] = useState([]);
 
-    const fetchExpensesByYear = async (date) => {
+    const fetchExpensesByYear = async (year) => {
         try {
-            setFetched(false);
-            const response = await fetch(`${url}${date.year()}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch data');
-            }
-            const responseData = await response.json();
+            const responseData = await apiService.fetchByYear(collectionName, year);
             setExpenses([...responseData]);
             setFetched(true);
         } catch (error) {
@@ -38,49 +32,24 @@ export const ExpenseProvider = ({ children }) => {
     }
 
     const addExpense = async (date) => {
-        const newItem = {
+        const newExpense = {
             name: "",
             category: null,
             price: 0,
             date: new Date(date)
         };
-
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newItem)
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to add a new expense.');
-            }
-
-            const responseData = await response.json();
+            const responseData = await apiService.addOne(collectionName, newExpense);
             setExpenses((prev) => [...prev, responseData]);
             setMonthlyExpenses((prev) => [...prev, responseData]);
-
         } catch (error) {
             console.error('Error while adding a new expense:', error);
         }
     }
 
-    const updateExpense = async (params) => {
-        const { ...updatedItem } = params;
+    const updateExpense = async (newExpense) => {
         try {
-            const response = await fetch(`${url}${params._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedItem)
-            });
-            if (!response.ok) {
-                throw new Error('Failed to update an expense.');
-            }
-            const responseData = await response.json();
+            const responseData = await apiService.updateOne(collectionName, newExpense);
 
             const updatedExpenses = expenses.map(item => item._id === responseData._id ? responseData : item);
             const updatedFilteredExpenses = monthlyExpenses.map(item => item._id === responseData._id ? responseData : item);
@@ -96,17 +65,11 @@ export const ExpenseProvider = ({ children }) => {
 
     const deleteExpenses = async (selectedExpenses) => {
         if (selectedExpenses.length > 0) {
-            const jsonBody = {
+            const itemIds = {
                 ids: selectedExpenses
             };
             try {
-                const response = await fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(jsonBody)
-                });
+                const responseData = await apiService.deleteMany(collectionName, selectedExpenses);
 
                 const updatedExpenses = expenses.filter(item => {
                     const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
@@ -120,10 +83,6 @@ export const ExpenseProvider = ({ children }) => {
 
                 setExpenses(updatedExpenses);
                 setMonthlyExpenses(updatedFilteredExpenses);
-
-                if (!response.ok) {
-                    throw new Error('Failed to delete an expense.');
-                }
             } catch (error) {
                 console.error('Error while deleting an expense:', error);
             }

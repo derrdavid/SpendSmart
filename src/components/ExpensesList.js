@@ -16,7 +16,7 @@ export default function ExpensesList() {
     const [selectedItems, setSelectedItems] = useState([]);
 
     useEffect(() => {
-        fetchExpenses(date);
+        fetchExpenses(year);
     }, [year]);
 
     useEffect(() => {

@@ -1,21 +1,17 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import apiService from "../services/apiService";
 
 const BudgetContext = createContext();
 
 export const BudgetProvider = ({ children }) => {
-    const url = `${process.env.REACT_APP_URL}/budgets/`;
+    const collectionName = 'budgets';
     const [budgets, setBudgets] = useState(new Array(12));
 
     const fetchBudgetsByYear = async (year) => {
         try {
-            const response = await fetch(`${url}${year}`);
-            if (!response.ok) {
-                throw new Error('Fehler beim Abrufen der Budgets.');
-            }
-            const responseData = await response.json();
+            const responseData = await apiService.fetchByYear(collectionName, year);
 
-            const updatedBudgets = new Array(12); // Kopiere das vorhandene budgets Array
-
+            const updatedBudgets = new Array(12);
             responseData.forEach(item => {
                 const month = new Date(item.date).getMonth();
                 updatedBudgets[month - 1] = item;
@@ -27,32 +23,15 @@ export const BudgetProvider = ({ children }) => {
         }
     }
 
-    const addBudget = async (input) => {
-        const month = new Date(input.date).getMonth();
+    const addBudget = async (newBudget) => {
+        const month = new Date(newBudget.date).getMonth();
         if (budgets[month - 1]) {
             return budgets[month - 1];
         }
-
-        const newBudget = {
-            amount: input.amount,
-            date: new Date(input.date)
-        };
         try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newBudget)
-            })
-
-            if (!response.ok) {
-                throw new Error("Failed to create a new budget.");
-            }
-
-            const responseData = await response.json();
+            const responseData = await apiService.addOne(collectionName, newBudget);
             const updatedBudgets = [...budgets];
-            const month = new Date(input.date).getMonth();
+            const month = newBudget.date;
 
             updatedBudgets[month - 1] = responseData;
             setBudgets(updatedBudgets);
@@ -63,22 +42,11 @@ export const BudgetProvider = ({ children }) => {
         }
     }
 
-    const updateBudget = async (input) => {
-        const { ...updatedBudget } = input;
+    const updateBudget = async (newBudget) => {
         try {
-            const response = await fetch(`${url}${input._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedBudget)
-            });
-            if (!response.ok) {
-                throw new Error('Failed to update a Budget.');
-            }
-            const responseData = await response.json();
+            const responseData = await apiService.updateOne(collectionName, newBudget);
             const updatedBudgets = [...budgets];
-            const month = new Date(input.date).getMonth();
+            const month = new Date(newBudget.date).getMonth();
 
             updatedBudgets[month - 1] = responseData;
             setBudgets(updatedBudgets);

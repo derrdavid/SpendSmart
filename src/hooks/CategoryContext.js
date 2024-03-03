@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import apiService from "../services/apiService";
 
 const CategoryContext = createContext();
 
 export const CategoryProvider = ({ children }) => {
-    const url = `${process.env.REACT_APP_URL}/categories/`;
+    const collectionName = 'categories';
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -13,12 +14,7 @@ export const CategoryProvider = ({ children }) => {
 
     const fetchCategories = async () => {
         try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Fehler beim Abrufen der Categories.');
-            }
-
-            const responseData = await response.json();
+            const responseData = await apiService.fetch(collectionName);
             setCategories([...responseData]);
         } catch (error) {
             console.error('Fehler beim Abrufen der Daten:', error);
@@ -33,22 +29,10 @@ export const CategoryProvider = ({ children }) => {
 
         try {
             if (categories.length >= 10) {
-                throw new Error("Maximum number of categories reached.");
+                throw new Error("Maximum amount of categories reached.");
             }
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newCategory)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to create a new category.");
-            }
-
-            const responseData = await response.json();
+            const responseData = await apiService.addOne(collectionName, newCategory);
             setCategories((prevCategories) => [...prevCategories, responseData]);
 
             return responseData;
@@ -59,12 +43,7 @@ export const CategoryProvider = ({ children }) => {
 
     const deleteCategory = async (id) => {
         try {
-            const response = await fetch(url + id, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                throw new Error("Failed to delete the category.");
-            }
+            const responseData = await apiService.deleteOne(collectionName, id);
 
             const updatedCategories = categories.filter(category => category._id !== id);
             setCategories([...updatedCategories]);

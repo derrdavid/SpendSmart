@@ -1,7 +1,7 @@
 import { Container, ThemeProvider, createTheme } from '@mui/material';
 import DashboardPage from './pages/DashboardPage';
-import DashboardDrawer from './components/DashboardDrawer';
-import DashboardFooter from './components/DashboardFooter';
+import DashboardDrawer from './components/Dashboard/DashboardDrawer';
+import DashboardFooter from './components/Dashboard/DashboardFooter';
 
 const theme = createTheme({
   palette: {

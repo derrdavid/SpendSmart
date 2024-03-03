@@ -14,15 +14,15 @@ export const SavingsLineChart = () => {
     const { date, year } = useDate();
 
     const [expenseList, setExpenseList] = useState(new Array(12).fill(0));
-    const [budgetList, setBudgetList] = useState(new Array(12).fill(0));
     const [savingsList, setSavingsList] = useState(new Array(12).fill(0));
 
     const [totalSavings, setTotalSavings] = useState(0);
     const [avgExpenses, setAvgExpenses] = useState(0);
+    let budgetList = [];
 
     useEffect(() => {
         setExpenseList(calculateSumsPerMonth());
-        setBudgetList(getAmounts());
+        budgetList = getAmounts();
         calcSavingsList();
         calcAvgExpenses();
     }, [filteredExpenses, budgets, date])
@@ -43,7 +43,7 @@ export const SavingsLineChart = () => {
         expenseList.forEach((item) => {
             avg += item;
         });
-        avg /= expenseList.length; // Korrektur: Teilen durch die Anzahl der Elemente
+        avg /= expenseList.length;
         setAvgExpenses(avg);
     };
 
@@ -89,12 +89,6 @@ export const SavingsLineChart = () => {
                                 label: 'Expenses',
                                 color: 'black',
                                 data: expenseList,
-                                valueFormatter: currencyFormatter
-                            },
-                            {
-                                label: 'Budget',
-                                color: '#819cbc',
-                                data: budgetList,
                                 valueFormatter: currencyFormatter
                             },
                             {

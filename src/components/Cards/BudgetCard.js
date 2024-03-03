@@ -54,7 +54,6 @@ export default function BudgetCard() {
     }
 
     const addOrCreateBudget = async () => {
-        console.log(budget)
         let newBudget;
         setEditable(false);
         if (budget._id == null) {

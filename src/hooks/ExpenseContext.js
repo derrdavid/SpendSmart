@@ -7,8 +7,8 @@ export const ExpenseProvider = ({ children }) => {
     const url = `${process.env.REACT_APP_URL}/expenses/`;
 
     const [fetched, setFetched] = useState(false);
-    const [allExpenses, setAllExpenses] = useState([]);
-    const [filteredExpenses, setFilteredExpenses] = useState([]);
+    const [expenses, setExpenses] = useState([]);
+    const [monthlyExpenses, setMonthlyExpenses] = useState([]);
 
     const fetchExpensesByYear = async (date) => {
         try {
@@ -18,7 +18,7 @@ export const ExpenseProvider = ({ children }) => {
                 throw new Error('Failed to fetch data');
             }
             const responseData = await response.json();
-            setAllExpenses([...responseData]);
+            setExpenses([...responseData]);
             setFetched(true);
         } catch (error) {
             console.error('Error fetching data:', error.message);
@@ -28,13 +28,13 @@ export const ExpenseProvider = ({ children }) => {
     const filterExpensesByMonth = async (date) => {
         const selectedDate = new Date(date);
 
-        const filteredExpenses = allExpenses.filter((expense) => {
+        const filteredExpenses = expenses.filter((expense) => {
             const expenseDate = new Date(expense.date);
             return (expenseDate.getYear() === selectedDate.getYear())
                 && (expenseDate.getMonth() === selectedDate.getMonth());
         });
 
-        setFilteredExpenses([...filteredExpenses]);
+        setMonthlyExpenses([...filteredExpenses]);
     }
 
     const addExpense = async (date) => {
@@ -59,8 +59,8 @@ export const ExpenseProvider = ({ children }) => {
             }
 
             const responseData = await response.json();
-            setAllExpenses((prev) => [...prev, responseData]);
-            setFilteredExpenses((prev) => [...prev, responseData]);
+            setExpenses((prev) => [...prev, responseData]);
+            setMonthlyExpenses((prev) => [...prev, responseData]);
 
         } catch (error) {
             console.error('Error while adding a new expense:', error);
@@ -82,11 +82,11 @@ export const ExpenseProvider = ({ children }) => {
             }
             const responseData = await response.json();
 
-            const updatedExpenses = allExpenses.map(item => item._id === responseData._id ? responseData : item);
-            const updatedFilteredExpenses = filteredExpenses.map(item => item._id === responseData._id ? responseData : item);
+            const updatedExpenses = expenses.map(item => item._id === responseData._id ? responseData : item);
+            const updatedFilteredExpenses = monthlyExpenses.map(item => item._id === responseData._id ? responseData : item);
 
-            setAllExpenses(updatedExpenses);
-            setFilteredExpenses(updatedFilteredExpenses);
+            setExpenses(updatedExpenses);
+            setMonthlyExpenses(updatedFilteredExpenses);
 
             return responseData;
         } catch (error) {
@@ -108,18 +108,18 @@ export const ExpenseProvider = ({ children }) => {
                     body: JSON.stringify(jsonBody)
                 });
 
-                const updatedExpenses = allExpenses.filter(item => {
+                const updatedExpenses = expenses.filter(item => {
                     const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
                     return !isSelected;
                 });
 
-                const updatedFilteredExpenses = filteredExpenses.filter(item => {
+                const updatedFilteredExpenses = monthlyExpenses.filter(item => {
                     const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
                     return !isSelected;
                 });
 
-                setAllExpenses(updatedExpenses);
-                setFilteredExpenses(updatedFilteredExpenses);
+                setExpenses(updatedExpenses);
+                setMonthlyExpenses(updatedFilteredExpenses);
 
                 if (!response.ok) {
                     throw new Error('Failed to delete an expense.');
@@ -133,7 +133,7 @@ export const ExpenseProvider = ({ children }) => {
     const calculateSumsPerMonth = () => {
         let sums = new Array(12).fill(0);
 
-        allExpenses.forEach((item) => {
+        expenses.forEach((item) => {
             const month = new Date(item.date).getMonth();
             sums[month] += item.price;
         })
@@ -143,10 +143,10 @@ export const ExpenseProvider = ({ children }) => {
     /**
    * Calculates the total expenses from filteredExpenses.
    */
-    const calculateFilteredTotalSum = () => {
+    const calculateMonthlyTotalSum = () => {
         let totalSum = 0;
 
-        filteredExpenses.forEach((item) => {
+        monthlyExpenses.forEach((item) => {
             totalSum += item.price;
         });
 
@@ -156,9 +156,9 @@ export const ExpenseProvider = ({ children }) => {
     return (
         <ExpenseContext.Provider value={{
             fetched,
-            allExpenses, setAllExpenses, filterExpensesByMonth,
+            allExpenses: expenses, setAllExpenses: setExpenses, filterExpensesByMonth,
             addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
-            filteredExpenses, setFilteredExpenses, calculateFilteredTotalSum,
+            filteredExpenses: monthlyExpenses, setFilteredExpenses: setMonthlyExpenses, calculateFilteredTotalSum: calculateMonthlyTotalSum,
             calculateSumsPerMonth
         }}>
             {children}

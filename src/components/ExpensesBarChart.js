@@ -52,7 +52,6 @@ export const ExpensesBarChart = () => {
         }
     };
 
-
     const xLabels = [
         'Jan',
         'Feb',
@@ -68,7 +67,6 @@ export const ExpensesBarChart = () => {
         'Dec'
     ];
 
-
     return (
         <Card sx={{
             height: '30vh',
@@ -78,13 +76,12 @@ export const ExpensesBarChart = () => {
         }}>
             <CardContent
                 sx={{
-                    height: '30vh',
+                    height: '100%',
                     width: '100%'
                 }}>
                 <Typography position={'relative'} top={10} padding={2} variant="h8" fontWeight={400} color="#00000040">
                     Expenses {year}
                 </Typography>
-
                 <BarChart
                     sx={{
                         mt: -5

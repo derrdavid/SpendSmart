@@ -5,10 +5,10 @@ const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children }) => {
     const url = `${process.env.REACT_APP_URL}/expenses/`;
+
     const [fetched, setFetched] = useState(false);
     const [allExpenses, setAllExpenses] = useState([]);
     const [filteredExpenses, setFilteredExpenses] = useState([]);
-    const [sumsPerMonth, setSumsPerMonth] = useState(new Array(12).fill(0));
 
     const fetchExpensesByYear = async (date) => {
         try {
@@ -130,26 +130,6 @@ export const ExpenseProvider = ({ children }) => {
         }
     }
 
-    /**
-    * Calculates the total expenses for each category from filteredExpenses.
-    */
-    const calculateCategorySums = () => {
-        const categorySums = {};
-
-        filteredExpenses.forEach((expense) => {
-            const categoryName = expense.category?.name;
-            const categoryPrice = expense.price;
-
-            if (categoryName) {
-                if (!categorySums.hasOwnProperty(categoryName)) {
-                    categorySums[categoryName] = 0;
-                }
-                categorySums[categoryName] += categoryPrice;
-            }
-        });
-        return categorySums;
-    };
-
     const calculateSumsPerMonth = () => {
         let sums = new Array(12).fill(0);
 
@@ -178,7 +158,7 @@ export const ExpenseProvider = ({ children }) => {
             fetched,
             allExpenses, setAllExpenses, filterExpensesByMonth,
             addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
-            filteredExpenses, setFilteredExpenses, calculateCategorySums, calculateFilteredTotalSum,
+            filteredExpenses, setFilteredExpenses, calculateFilteredTotalSum,
             calculateSumsPerMonth
         }}>
             {children}

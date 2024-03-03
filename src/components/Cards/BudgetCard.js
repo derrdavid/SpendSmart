@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Stack, Typography, Input } from '@mui/material';
-import monthToString from '../../utils/dateFormatter';
 import currencyFormatter from '../../utils/currencyFormatter';
 import { useBudgets } from '../../hooks/BudgetContext';
 import { useDate } from '../../hooks/DateContext';

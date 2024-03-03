@@ -11,8 +11,10 @@ import { SavingsLineChart } from '../components/SavingsLineChart';
 import BalanceCards from '../components/Cards/BalanceCards';
 import { BudgetProvider } from '../hooks/BudgetContext';
 import { DateProvider, useDate } from '../hooks/DateContext';
+import { TotalCards } from '../components/Cards/TotalCards';
 
 export default function DashboardPage() {
+
     return (
         <DateProvider>
             <ExpenseProvider>
@@ -25,7 +27,7 @@ export default function DashboardPage() {
                             display: 'flex',
                             alignItems: 'flex-start',
                             margin: '5em',
-                            gap: '2em'
+                            gap: '2em',
                         }}>
                             <Stack spacing={2}>
                                 <MonthSelection />
@@ -41,18 +43,6 @@ export default function DashboardPage() {
                                 <ExpensesBarChart />
                                 <Stack direction='row' spacing={2}>
                                     <SavingsLineChart></SavingsLineChart>
-                                    <Stack direction='column' spacing={2}>
-                                        <Card>
-                                            <CardContent>
-                                                <h1>avg</h1>
-                                            </CardContent>
-                                        </Card>
-                                        <Card>
-                                            <CardContent>
-                                                <h1>total</h1>
-                                            </CardContent>
-                                        </Card>
-                                    </Stack>
                                 </Stack>
                             </Stack>
                         </Container>

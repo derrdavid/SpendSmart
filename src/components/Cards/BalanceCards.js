@@ -7,7 +7,6 @@ import { useDate } from "../../hooks/DateContext";
 
 export default function BalanceCards() {
     const { month } = useDate();
-
     const { calculateFilteredTotalSum } = useExpenses();
     const { filteredExpenses } = useExpenses();
     const { budgets } = useBudgets();

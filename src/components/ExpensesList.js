@@ -8,10 +8,10 @@ import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
 import { useDate } from '../hooks/DateContext';
 
 export default function ExpensesList() {
-    const { fetched, allExpenses, filterExpensesByMonth,
+    const { fetched, filterExpensesByMonth,
         addExpense, updateExpense, deleteExpenses, filteredExpenses, fetchExpenses } = useExpenses();
 
-    const { date, setDate, year, month } = useDate();
+    const { date, year, month } = useDate();
 
     const [selectedItems, setSelectedItems] = useState([]);
 

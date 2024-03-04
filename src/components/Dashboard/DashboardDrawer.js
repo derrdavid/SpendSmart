@@ -1,4 +1,5 @@
-import { Drawer, Typography } from '@mui/material';
+import { Drawer, Stack, Typography } from '@mui/material';
+import logo from '../../assets/logo.png';
 
 export default function DashboardDrawer() {
     return (
@@ -21,9 +22,13 @@ export default function DashboardDrawer() {
             variant="permanent"
             anchor="top"
         >
-            <Typography variant="h7" sx={{ ml: '25%', fontWeight: 900, display: 'inline' }}>
-                Spend Smart
-            </Typography>
+            <Stack direction={'row'} sx={{ ml: '25%', display: 'inline' }} >
+                <img src={logo} height={25} width={25}></img>
+                <Typography variant="h7" sx={{ fontWeight: 900 }}>
+                    Spend Smart
+                </Typography>
+            </Stack>
+
         </Drawer >
     )
 }

@@ -14,7 +14,7 @@ export default function DashboardFooter() {
             sx={{
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
-                    height: 100,
+                    height: 60,
                     boxSizing: 'border-box',
                     alignItems: 'center'
                 },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Stack } from '@mui/material';
 import { useExpenses } from '../../contexts/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";

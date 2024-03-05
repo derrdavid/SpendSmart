@@ -32,10 +32,14 @@ export default function BudgetCard({ date }) {
     };
 
     const handleInputChange = (e) => {
-        setBudget(prevBudget => ({
-            ...prevBudget,
-            amount: e.target.value
-        }));
+        const input = e.target.value;
+
+        if (/^\d*$/.test(input)) {
+            setBudget(prevBudget => ({
+                ...prevBudget,
+                amount: input
+            }));
+        }
     };
 
     const handleInputBlur = async (e) => {
@@ -84,7 +88,6 @@ export default function BudgetCard({ date }) {
                     </Typography>
                     {editable ? (
                         <Input
-                            type='number'
                             sx={{
                                 border: 0,
                                 fontSize: 40,

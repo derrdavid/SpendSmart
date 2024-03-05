@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Stack } from '@mui/material';
-import { useExpenses } from '../hooks/ExpenseContext';
+import { useExpenses } from '../../contexts/ExpenseContext';
 import { DataGrid } from "@mui/x-data-grid";
-import { CategoryBadge } from './CategoryBadge/CategoryBadge';
-import currencyFormatter from '../utils/currencyFormatter';
-import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
-import { useDate } from '../hooks/DateContext';
+import { CategoryBadge } from '../CategoryBadge/CategoryBadge';
+import currencyFormatter from '../../utils/currencyFormatter';
+import { CategoryBadgeEditMode } from '../CategoryBadge/CategoryBadgeEditMode';
+import { useDate } from '../../contexts/DateContext';
 
 export default function ExpensesList() {
-    const { fetched, filterExpensesByMonth, addExpense, updateExpense,
-        deleteExpenses, monthlyExpenses, fetchExpensesByYear } = useExpenses();
-    const { date, year, month } = useDate();
+    const { addExpense, updateExpense,
+        deleteExpenses, monthlyExpenses } = useExpenses();
+    const { date } = useDate();
 
     const [selectedItems, setSelectedItems] = useState([]);
-
-    useEffect(() => {
-        fetchExpensesByYear(year);
-    }, [year]);
-
-    useEffect(() => {
-        if (fetched) {
-            filterExpensesByMonth(date);
-        }
-    }, [month, fetched]);
 
     const handleAddExpense = () => {
         addExpense(date);

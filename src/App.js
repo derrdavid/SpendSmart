@@ -2,11 +2,11 @@ import { Container, ThemeProvider, createTheme } from '@mui/material';
 import DashboardPage from './pages/DashboardPage';
 import DashboardDrawer from './components/Dashboard/DashboardDrawer';
 import DashboardFooter from './components/Dashboard/DashboardFooter';
-import { DateProvider } from './hooks/DateContext';
-import { ExpenseProvider } from './hooks/ExpenseContext';
-import { CategoryProvider } from './hooks/CategoryContext';
-import { BudgetProvider } from './hooks/BudgetContext';
-import { SavingsProvider } from './hooks/SavingsContext';
+import { DateProvider } from './contexts/DateContext';
+import { ExpenseProvider } from './contexts/ExpenseContext';
+import { CategoryProvider } from './contexts/CategoryContext';
+import { BudgetProvider } from './contexts/BudgetContext';
+import { SavingsProvider } from './contexts/SavingsContext';
 
 const theme = createTheme({
   palette: {

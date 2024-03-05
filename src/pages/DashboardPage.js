@@ -1,36 +1,42 @@
 import { Container, Divider, Stack } from '@mui/material';
-import ExpensesList from '../components/ExpensesList';
+import ExpensesList from '../components/ExpenseControls/ExpensesList';
 import BudgetCard from '../components/Cards/BudgetCard';
-import MonthSelection from '../components/MonthSelection';
-import { ExpensesBarChart } from '../components/ExpensesBarChart';
-import { SavingsLineChart } from '../components/SavingsLineChart';
+import MonthSelection from '../components/ExpenseControls/MonthSelection';
+import { ExpensesBarChart } from '../components/Charts/ExpensesBarChart';
+import { SavingsLineChart } from '../components/Charts/SavingsLineChart';
 import { CurrencyCard } from '../components/Cards/CurrencyCard';
 import { BalanceCard } from '../components/Cards/BalanceCard';
 import { useEffect, useState } from 'react';
-import { useDate } from '../hooks/DateContext';
-import { useExpenses } from '../hooks/ExpenseContext';
-import { useBudgets } from '../hooks/BudgetContext';
-import { useSavings } from '../hooks/SavingsContext';
+import { useDate } from '../contexts/DateContext';
+import { useExpenses } from '../contexts/ExpenseContext';
+import { useBudgets } from '../contexts/BudgetContext';
+import { useSavings } from '../contexts/SavingsContext';
+import { useCategories } from '../contexts/CategoryContext';
 
 export default function DashboardPage() {
 
-    const { month } = useDate();
-    const { calculateMonthlyTotalSum, filteredExpenses, avgExpenses } = useExpenses();
-    const { budgets } = useBudgets();
-    const { totalSavings } = useSavings();
+    const { month, year, date, setDate } = useDate();
+    const { monthlyExpenses, expensesFetched, filterExpensesByMonth, fetchExpensesByYear, expenses, avgExpenses, expensesList, calculateExpensesPerMonth } = useExpenses();
+    const { budgetList, budgetsFetched, fetchBudgetsByYear, budgets, calculateBudgetsPerMonth } = useBudgets();
+    const { categories } = useCategories();
+    const { monthlySavings, calculateSavings, getTotalSavings } = useSavings();
 
-    const [totalMonthlyExpenses, setTotalMonthlyExpenses] = useState(0);
-    const [monthlySavings, setMonthlySavings] = useState(0);
 
     useEffect(() => {
-        const totalExpenses = calculateMonthlyTotalSum();
-        setTotalMonthlyExpenses(totalExpenses);
-        const monthBudget = budgets[month];
-        if (monthBudget) {
-            setMonthlySavings(monthBudget.amount - totalExpenses);
+        fetchBudgetsByYear(year);
+        fetchExpensesByYear(year);
+    }, [year]);
+
+    useEffect(() => {
+        if (expensesFetched && budgetsFetched) {
+            filterExpensesByMonth(month);
+            calculateBudgetsPerMonth();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filteredExpenses, budgets]);
+    }, [month, expenses, budgets]);
+
+    useEffect(() => {
+        calculateSavings();
+    }, [monthlyExpenses, budgetList]);
 
     return (
 
@@ -44,24 +50,25 @@ export default function DashboardPage() {
             gap: '2em',
         }}>
             <Stack spacing={2}>
-                <MonthSelection />
+                <MonthSelection date={date} setDate={setDate} />
                 <Divider orientation="horizontal" flexItem />
                 <ExpensesList style={{ flex: '1' }} />
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack direction='column' spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
                 <Stack direction='row' spacing={2}>
-                    <BudgetCard></BudgetCard>
+                    <BudgetCard date={date}></BudgetCard>
                     <Stack direction={'row'} spacing={2}>
-                        <CurrencyCard title={"Expenses"} value={totalMonthlyExpenses}></CurrencyCard>
-                        <BalanceCard title={"Balance"} balance={monthlySavings} />
+                        <CurrencyCard title={"Expenses"} value={expensesList[month]}></CurrencyCard>
+                        <BalanceCard title={"Balance"} balance={monthlySavings[month]} />
                     </Stack >
                 </Stack>
-                <ExpensesBarChart />
+                <ExpensesBarChart expenses={expenses} categories={categories} year={year} />
                 <Stack direction='row' spacing={2}>
-                    <SavingsLineChart></SavingsLineChart>
+                    <SavingsLineChart expensesList={expensesList} savingsList={monthlySavings} year={year}
+                    ></SavingsLineChart>
                     <Stack direction='column' spacing={2} height={'40vh'}>
-                        <BalanceCard title={"Total Savings"} balance={totalSavings} />
+                        <BalanceCard title={"Total Savings"} balance={getTotalSavings()} />
                         <CurrencyCard title={"Avg.Monthly Expenses"} value={avgExpenses} />
                     </Stack>
                 </Stack>

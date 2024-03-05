@@ -5,36 +5,40 @@ const BudgetContext = createContext();
 
 export const BudgetProvider = ({ children }) => {
     const collectionName = 'budgets';
+
+    const [budgetsFetched, setBudgetsFetched] = useState(false);
     const [budgets, setBudgets] = useState(new Array(12));
-    const [budgetList, setBudgetList] = useState(new Array(12)).fill(0);
+    const [budgetList, setBudgetList] = useState(new Array(12).fill(0));
 
     const fetchBudgetsByYear = async (year) => {
+        setBudgetsFetched(false);
         try {
             const responseData = await apiService.fetchByYear(collectionName, year);
 
             const updatedBudgets = new Array(12);
             responseData.forEach(item => {
                 const month = new Date(item.date).getMonth();
-                updatedBudgets[month - 1] = item;
+                updatedBudgets[month] = item;
             });
 
             setBudgets(updatedBudgets);
+            setBudgetsFetched(true);
         } catch (error) {
-            console.error('Fehler beim Abrufen der Daten:', error);
+            console.error('Error fetching data:', error);
         }
     }
 
     const addBudget = async (newBudget) => {
         const month = new Date(newBudget.date).getMonth();
-        if (budgets[month - 1]) {
-            return budgets[month - 1];
+        if (budgets[month]) {
+            return budgets[month];
         }
         try {
             const responseData = await apiService.addOne(collectionName, newBudget);
             const updatedBudgets = [...budgets];
             const month = newBudget.date;
 
-            updatedBudgets[month - 1] = responseData;
+            updatedBudgets[month] = responseData;
             setBudgets(updatedBudgets);
 
             return responseData;
@@ -49,7 +53,7 @@ export const BudgetProvider = ({ children }) => {
             const updatedBudgets = [...budgets];
             const month = new Date(newBudget.date).getMonth();
 
-            updatedBudgets[month - 1] = responseData;
+            updatedBudgets[month] = responseData;
             setBudgets(updatedBudgets);
 
             return responseData;
@@ -58,21 +62,22 @@ export const BudgetProvider = ({ children }) => {
         }
     };
 
-    const getMonthlyBudgetAmountsList = () => {
+    const calculateBudgetsPerMonth = () => {
         const amounts = new Array(12).fill(0);
         budgets.forEach((item) => {
             if (item != null) {
-                const month = new Date(item.date).getMonth() - 1;
+                const month = new Date(item.date).getMonth();
                 amounts[month] = item.amount;
             }
         });
+        setBudgetList(amounts);
         return amounts;
     };
 
 
     return (
         <BudgetContext.Provider value={{
-            budgets, budgetList, updateBudget, addBudget, getMonthlyBudgetAmountsList, fetchBudgetsByYear
+            budgetsFetched, budgets, budgetList, updateBudget, addBudget, calculateBudgetsPerMonth, fetchBudgetsByYear
         }}>
             {children}
         </BudgetContext.Provider>

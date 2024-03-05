@@ -1,17 +1,9 @@
 import { BarChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
-import { useCategories } from "../hooks/CategoryContext";
-import { useExpenses } from "../hooks/ExpenseContext";
-import currencyFormatter from "../utils/currencyFormatter";
-import { Card, CardContent, Stack, Typography } from "@mui/material";
-import { useDate } from "../hooks/DateContext";
+import currencyFormatter from "../../utils/currencyFormatter";
+import { Card, CardContent, Typography } from "@mui/material";
 
-export const ExpensesBarChart = () => {
-
-    const { year } = useDate();
-    const { categories } = useCategories();
-    const { expenses } = useExpenses();
-
+export const ExpensesBarChart = ({ expenses, categories, year }) => {
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
@@ -52,21 +44,6 @@ export const ExpensesBarChart = () => {
         }
     };
 
-    const xLabels = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-    ];
-
     return (
         <Card sx={{
             height: '30vh',
@@ -99,3 +76,18 @@ export const ExpensesBarChart = () => {
         </Card >
     );
 }
+
+const xLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+];

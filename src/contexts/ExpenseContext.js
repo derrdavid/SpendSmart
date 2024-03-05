@@ -5,7 +5,7 @@ const ExpenseContext = createContext();
 export const ExpenseProvider = ({ children }) => {
     const collectionName = 'expenses';
 
-    const [fetched, setFetched] = useState(false);
+    const [expensesFetched, setFetched] = useState(false);
 
     const [expenses, setExpenses] = useState([]);
     const [monthlyExpenses, setMonthlyExpenses] = useState([]);
@@ -13,6 +13,7 @@ export const ExpenseProvider = ({ children }) => {
     const [avgExpenses, setAvgExpenses] = useState(0);
 
     const fetchExpensesByYear = async (year) => {
+        setFetched(false);
         try {
             const responseData = await apiService.fetchByYear(collectionName, year);
             setExpenses([...responseData]);
@@ -22,16 +23,13 @@ export const ExpenseProvider = ({ children }) => {
         }
     };
 
-    const filterExpensesByMonth = async (date) => {
-        const selectedDate = new Date(date);
-
+    const filterExpensesByMonth = async (month) => {
         const filteredExpenses = expenses.filter((expense) => {
             const expenseDate = new Date(expense.date);
-            return (expenseDate.getYear() === selectedDate.getYear())
-                && (expenseDate.getMonth() === selectedDate.getMonth());
+            return (expenseDate.getMonth() === month);
         });
-
         setMonthlyExpenses([...filteredExpenses]);
+        calculateExpensesPerMonth();
     }
 
     const addExpense = async (date) => {
@@ -68,11 +66,8 @@ export const ExpenseProvider = ({ children }) => {
 
     const deleteExpenses = async (selectedExpenses) => {
         if (selectedExpenses.length > 0) {
-            const itemIds = {
-                ids: selectedExpenses
-            };
             try {
-                const responseData = await apiService.deleteMany(collectionName, selectedExpenses);
+                await apiService.deleteMany(collectionName, selectedExpenses);
 
                 const updatedExpenses = expenses.filter(item => {
                     const isSelected = selectedExpenses.some(selectedItem => selectedItem._id === item._id);
@@ -100,20 +95,8 @@ export const ExpenseProvider = ({ children }) => {
             sums[month] += item.price;
         })
         setExpensesList(sums);
+        calculateAvgExpenses();
     }
-
-    /**
-   * Calculates the total expenses from filteredExpenses.
-   */
-    const calculateMonthlyTotalSum = () => {
-        let totalSum = 0;
-
-        monthlyExpenses.forEach((item) => {
-            totalSum += item.price;
-        });
-
-        return totalSum;
-    };
 
     const calculateAvgExpenses = () => {
         let avg = 0;
@@ -126,10 +109,10 @@ export const ExpenseProvider = ({ children }) => {
 
     return (
         <ExpenseContext.Provider value={{
-            fetched,
+            expensesFetched,
             expenses, setExpenses, filterExpensesByMonth,
             addExpense, updateExpense, deleteExpenses, fetchExpensesByYear,
-            monthlyExpenses, setMonthlyExpenses, calculateMonthlyTotalSum,
+            monthlyExpenses, setMonthlyExpenses,
             calculateExpensesPerMonth, expensesList, avgExpenses, calculateAvgExpenses
         }}>
             {children}

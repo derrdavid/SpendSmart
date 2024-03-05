@@ -17,7 +17,7 @@ export const CategoryProvider = ({ children }) => {
             const responseData = await apiService.fetch(collectionName);
             setCategories([...responseData]);
         } catch (error) {
-            console.error('Fehler beim Abrufen der Daten:', error);
+            console.error('Error fetching data:', error);
         }
     };
 

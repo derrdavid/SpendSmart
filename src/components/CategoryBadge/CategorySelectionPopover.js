@@ -1,7 +1,7 @@
 import { Button, Divider, Grid, List, ListItem, Stack, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useCategories } from "../../hooks/CategoryContext";
-import { useExpenses } from "../../hooks/ExpenseContext";
+import { useCategories } from "../../contexts/CategoryContext";
+import { useExpenses } from "../../contexts/ExpenseContext";
 import { Remove } from "@mui/icons-material";
 import { CategoryBadge } from "./CategoryBadge";
 

@@ -1,41 +1,9 @@
 import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { useEffect } from "react";
-import { useExpenses } from "../hooks/ExpenseContext";
-import { useBudgets } from "../hooks/BudgetContext";
-import currencyFormatter from "../utils/currencyFormatter";
-import { useDate } from "../hooks/DateContext";
-import { useSavings } from "../hooks/SavingsContext";
+import currencyFormatter from "../../utils/currencyFormatter";
 
-export const SavingsLineChart = () => {
 
-    const { filteredExpenses, expensesList, calculateExpensesPerMonth, calculateAvgExpenses } = useExpenses();
-    const { budgets, getMonthlyBudgetAmountsList } = useBudgets();
-    const { date, year } = useDate();
-    const { savingsList, getSavingsList } = useSavings();
-
-    useEffect(() => {
-        calculateExpensesPerMonth();
-        getMonthlyBudgetAmountsList();
-        getSavingsList();
-        calculateAvgExpenses();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [filteredExpenses, budgets, date])
-
-    const xLabels = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-    ];
+export const SavingsLineChart = ({ expensesList, savingsList, year }) => {
 
     return (
         <Stack direction={"row"} gap={2}>
@@ -79,3 +47,18 @@ export const SavingsLineChart = () => {
         </Stack>
     );
 }
+
+const xLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+];

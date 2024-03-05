@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Stack, Typography, Input } from '@mui/material';
 import currencyFormatter from '../../utils/currencyFormatter';
-import { useBudgets } from '../../hooks/BudgetContext';
-import { useDate } from '../../hooks/DateContext';
+import { useBudgets } from '../../contexts/BudgetContext';
+import { useDate } from '../../contexts/DateContext';
 
-export default function BudgetCard() {
+export default function BudgetCard({ date }) {
 
-    const { date, year } = useDate();
-    const { budgets, updateBudget, addBudget, fetchBudgetsByYear } = useBudgets();
+    const { budgets, updateBudget, addBudget } = useBudgets();
 
     const [editable, setEditable] = useState(false);
     const [hover, setHover] = useState(false);
-    const [budget, setBudget] = useState({});
+    const [budget, setBudget] = useState({
 
-    useEffect(() => {
-        fetchBudgetsByYear(year);
-    }, [year])
+    });
 
     useEffect(() => {
         const month = date.month();
@@ -25,8 +22,8 @@ export default function BudgetCard() {
         } else {
             setBudget({
                 amount: 0,
-                date: new Date(date.year(), date.month() + 1, 1, 0, 0, 0, 0)
-            })
+                date: new Date(date.year(), date.month(), 1, 0, 0, 0, 0)
+            });
         }
     }, [date, budgets])
 

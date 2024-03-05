@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 import apiService from "../services/apiService";
 
 const BudgetContext = createContext();
@@ -6,6 +6,7 @@ const BudgetContext = createContext();
 export const BudgetProvider = ({ children }) => {
     const collectionName = 'budgets';
     const [budgets, setBudgets] = useState(new Array(12));
+    const [budgetList, setBudgetList] = useState(new Array(12)).fill(0);
 
     const fetchBudgetsByYear = async (year) => {
         try {
@@ -57,20 +58,22 @@ export const BudgetProvider = ({ children }) => {
         }
     };
 
-    const getAmounts = () => {
+    const getMonthlyBudgetAmountsList = () => {
         const amounts = new Array(12).fill(0);
         budgets.forEach((item) => {
             if (item != null) {
                 const month = new Date(item.date).getMonth() - 1;
                 amounts[month] = item.amount;
             }
-        })
-
+        });
         return amounts;
-    }
+    };
+
 
     return (
-        <BudgetContext.Provider value={{ budgets, updateBudget, addBudget, getAmounts, fetchBudgetsByYear }}>
+        <BudgetContext.Provider value={{
+            budgets, budgetList, updateBudget, addBudget, getMonthlyBudgetAmountsList, fetchBudgetsByYear
+        }}>
             {children}
         </BudgetContext.Provider>
     );

@@ -5,7 +5,7 @@ export const CategoryBadge = ({ category }) => {
 
     if (category === null || category.color === "") {
         category = {
-            name: "none",
+            name: "undefined",
             color: "#AAAAAA"
         }
     }

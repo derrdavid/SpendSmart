@@ -1,51 +1,26 @@
 import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useExpenses } from "../hooks/ExpenseContext";
 import { useBudgets } from "../hooks/BudgetContext";
 import currencyFormatter from "../utils/currencyFormatter";
 import { useDate } from "../hooks/DateContext";
-import { TotalCards } from "./Cards/TotalCards";
+import { useSavings } from "../hooks/SavingsContext";
 
 export const SavingsLineChart = () => {
 
-    const { filteredExpenses, calculateSumsPerMonth } = useExpenses();
-    const { budgets, getAmounts } = useBudgets();
+    const { filteredExpenses, expensesList, calculateExpensesPerMonth, calculateAvgExpenses } = useExpenses();
+    const { budgets, getMonthlyBudgetAmountsList } = useBudgets();
     const { date, year } = useDate();
-
-    const [expenseList, setExpenseList] = useState(new Array(12).fill(0));
-    const [savingsList, setSavingsList] = useState(new Array(12).fill(0));
-
-    const [totalSavings, setTotalSavings] = useState(0);
-    const [avgExpenses, setAvgExpenses] = useState(0);
-    let budgetList = [];
+    const { savingsList, getSavingsList } = useSavings();
 
     useEffect(() => {
-        setExpenseList(calculateSumsPerMonth());
-        budgetList = getAmounts();
-        calcSavingsList();
-        calcAvgExpenses();
+        calculateExpensesPerMonth();
+        getMonthlyBudgetAmountsList();
+        getSavingsList();
+        calculateAvgExpenses();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filteredExpenses, budgets, date])
-
-    const calcSavingsList = () => {
-        let tempTotal = 0;
-        let savings = new Array(12).fill(0);
-        for (let i = 0; i < budgetList.length; i++) {
-            savings[i] = budgetList[i] - expenseList[i];
-            tempTotal += savings[i];
-        }
-        setTotalSavings(tempTotal);
-        setSavingsList(savings);
-    }
-
-    const calcAvgExpenses = () => {
-        let avg = 0;
-        expenseList.forEach((item) => {
-            avg += item;
-        });
-        avg /= expenseList.length;
-        setAvgExpenses(avg);
-    };
 
     const xLabels = [
         'Jan',
@@ -88,7 +63,7 @@ export const SavingsLineChart = () => {
                             {
                                 label: 'Expenses',
                                 color: 'black',
-                                data: expenseList,
+                                data: expensesList,
                                 valueFormatter: currencyFormatter
                             },
                             {
@@ -101,7 +76,6 @@ export const SavingsLineChart = () => {
                     />
                 </CardContent>
             </Card>
-            <TotalCards savings={totalSavings} avg={avgExpenses}></TotalCards>
         </Stack>
     );
 }

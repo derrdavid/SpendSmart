@@ -1,4 +1,4 @@
-import { Button, Divider, Grid, Input, List, ListItem, Stack, TextField } from "@mui/material";
+import { Button, Divider, Grid, List, ListItem, Stack, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useCategories } from "../../hooks/CategoryContext";
 import { useExpenses } from "../../hooks/ExpenseContext";
@@ -23,11 +23,6 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
         }
         setTempCategory(newCategory);
     }, [])
-
-    const randomHex = () => {
-        const randomHexColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
-        return randomHexColor;
-    }
 
     const handleInputChange = (e) => {
         setTempCategory(prevCategory => ({
@@ -105,4 +100,9 @@ export const CategorySelectionPopover = ({ expense, handleClose, setSelectedCate
             <Divider></Divider>
         </div>
     );
+}
+
+const randomHex = () => {
+    const randomHexColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+    return randomHexColor;
 }

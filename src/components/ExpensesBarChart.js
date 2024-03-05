@@ -10,14 +10,14 @@ export const ExpensesBarChart = () => {
 
     const { year } = useDate();
     const { categories } = useCategories();
-    const { allExpenses } = useExpenses();
+    const { expenses } = useExpenses();
 
     const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         loadChartData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [allExpenses, year]);
+    }, [expenses, year]);
 
     const loadChartData = async () => {
         try {
@@ -26,7 +26,7 @@ export const ExpensesBarChart = () => {
             categories.forEach(category => {
                 const categoryData = [];
                 for (let i = 0; i < 12; i++) {
-                    const filteredData = allExpenses.filter(expense =>
+                    const filteredData = expenses.filter(expense =>
                         expense.category && expense.category._id === category._id
                         && new Date(expense.date).getMonth() === i);
                     let sum = 0;

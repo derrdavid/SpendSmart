@@ -6,6 +6,7 @@ import { DateProvider } from './hooks/DateContext';
 import { ExpenseProvider } from './hooks/ExpenseContext';
 import { CategoryProvider } from './hooks/CategoryContext';
 import { BudgetProvider } from './hooks/BudgetContext';
+import { SavingsProvider } from './hooks/SavingsContext';
 
 const theme = createTheme({
   palette: {
@@ -18,23 +19,27 @@ const theme = createTheme({
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <DashboardDrawer />
-      <DateProvider>
-        <ExpenseProvider>
-          <BudgetProvider>
-            <CategoryProvider>
-              <Container style={{
-                justifyContent: 'center'
-              }}>
-                <DashboardPage></DashboardPage>
-              </Container>
-            </CategoryProvider>
-          </BudgetProvider>
-        </ExpenseProvider>
-      </DateProvider>
-      <DashboardFooter />
-    </ThemeProvider >
+    <>
+      <ThemeProvider theme={theme}>
+        <DashboardDrawer />
+        <DateProvider>
+          <ExpenseProvider>
+            <BudgetProvider>
+              <CategoryProvider>
+                <SavingsProvider>
+                  <Container style={{
+                    justifyContent: 'center'
+                  }}>
+                    <DashboardPage></DashboardPage>
+                  </Container>
+                </SavingsProvider>
+              </CategoryProvider>
+            </BudgetProvider>
+          </ExpenseProvider>
+        </DateProvider>
+        <DashboardFooter />
+      </ThemeProvider >
+    </>
   );
 }
 

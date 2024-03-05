@@ -6,8 +6,11 @@ export const ExpenseProvider = ({ children }) => {
     const collectionName = 'expenses';
 
     const [fetched, setFetched] = useState(false);
+
     const [expenses, setExpenses] = useState([]);
     const [monthlyExpenses, setMonthlyExpenses] = useState([]);
+    const [expensesList, setExpensesList] = useState(new Array(12).fill(0));
+    const [avgExpenses, setAvgExpenses] = useState(0);
 
     const fetchExpensesByYear = async (year) => {
         try {
@@ -89,14 +92,14 @@ export const ExpenseProvider = ({ children }) => {
         }
     }
 
-    const calculateSumsPerMonth = () => {
+    const calculateExpensesPerMonth = () => {
         let sums = new Array(12).fill(0);
 
         expenses.forEach((item) => {
             const month = new Date(item.date).getMonth();
             sums[month] += item.price;
         })
-        return sums;
+        setExpensesList(sums);
     }
 
     /**
@@ -112,13 +115,22 @@ export const ExpenseProvider = ({ children }) => {
         return totalSum;
     };
 
+    const calculateAvgExpenses = () => {
+        let avg = 0;
+        expensesList.forEach((item) => {
+            avg += item;
+        });
+        avg /= expensesList.length;
+        setAvgExpenses(avg);
+    };
+
     return (
         <ExpenseContext.Provider value={{
             fetched,
-            allExpenses: expenses, setAllExpenses: setExpenses, filterExpensesByMonth,
-            addExpense, updateExpense, deleteExpenses, fetchExpenses: fetchExpensesByYear,
-            filteredExpenses: monthlyExpenses, setFilteredExpenses: setMonthlyExpenses, calculateFilteredTotalSum: calculateMonthlyTotalSum,
-            calculateSumsPerMonth
+            expenses, setExpenses, filterExpensesByMonth,
+            addExpense, updateExpense, deleteExpenses, fetchExpensesByYear,
+            monthlyExpenses, setMonthlyExpenses, calculateMonthlyTotalSum,
+            calculateExpensesPerMonth, expensesList, avgExpenses, calculateAvgExpenses
         }}>
             {children}
         </ExpenseContext.Provider>

@@ -43,7 +43,7 @@ export const CategoryProvider = ({ children }) => {
 
     const deleteCategory = async (id) => {
         try {
-            const responseData = await apiService.deleteOne(collectionName, id);
+            await apiService.deleteOne(collectionName, id);
 
             const updatedCategories = categories.filter(category => category._id !== id);
             setCategories([...updatedCategories]);
@@ -54,7 +54,9 @@ export const CategoryProvider = ({ children }) => {
 
 
     return (
-        <CategoryContext.Provider value={{ categories, fetchCategories, addCategory, deleteCategory }}>
+        <CategoryContext.Provider value={{
+            categories, fetchCategories, addCategory, deleteCategory
+        }}>
             {children}
         </CategoryContext.Provider>
     );

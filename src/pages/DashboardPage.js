@@ -10,23 +10,26 @@ import { useEffect, useState } from 'react';
 import { useDate } from '../hooks/DateContext';
 import { useExpenses } from '../hooks/ExpenseContext';
 import { useBudgets } from '../hooks/BudgetContext';
+import { useSavings } from '../hooks/SavingsContext';
 
 export default function DashboardPage() {
 
     const { month } = useDate();
-    const { calculateFilteredTotalSum, filteredExpenses } = useExpenses();
+    const { calculateMonthlyTotalSum, filteredExpenses, avgExpenses } = useExpenses();
     const { budgets } = useBudgets();
+    const { totalSavings } = useSavings();
 
     const [totalMonthlyExpenses, setTotalMonthlyExpenses] = useState(0);
     const [monthlySavings, setMonthlySavings] = useState(0);
 
     useEffect(() => {
-        const totalExpenses = calculateFilteredTotalSum();
-        setTotalMonthlyExpenses();
+        const totalExpenses = calculateMonthlyTotalSum();
+        setTotalMonthlyExpenses(totalExpenses);
         const monthBudget = budgets[month];
         if (monthBudget) {
             setMonthlySavings(monthBudget.amount - totalExpenses);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filteredExpenses, budgets]);
 
     return (
@@ -57,6 +60,10 @@ export default function DashboardPage() {
                 <ExpensesBarChart />
                 <Stack direction='row' spacing={2}>
                     <SavingsLineChart></SavingsLineChart>
+                    <Stack direction='column' spacing={2} height={'40vh'}>
+                        <BalanceCard title={"Total Savings"} balance={totalSavings} />
+                        <CurrencyCard title={"Avg.Monthly Expenses"} value={avgExpenses} />
+                    </Stack>
                 </Stack>
             </Stack>
         </Container>

@@ -8,13 +8,14 @@ import { CategoryBadgeEditMode } from './CategoryBadge/CategoryBadgeEditMode';
 import { useDate } from '../hooks/DateContext';
 
 export default function ExpensesList() {
-    const { fetched, filterExpensesByMonth, addExpense, updateExpense, deleteExpenses, filteredExpenses, fetchExpenses } = useExpenses();
+    const { fetched, filterExpensesByMonth, addExpense, updateExpense,
+        deleteExpenses, monthlyExpenses, fetchExpensesByYear } = useExpenses();
     const { date, year, month } = useDate();
 
     const [selectedItems, setSelectedItems] = useState([]);
 
     useEffect(() => {
-        fetchExpenses(year);
+        fetchExpensesByYear(year);
     }, [year]);
 
     useEffect(() => {
@@ -59,12 +60,12 @@ export default function ExpensesList() {
                 }}
                 editMode='row'
                 getRowId={(row) => row._id}
-                rows={filteredExpenses}
+                rows={monthlyExpenses}
                 processRowUpdate={handleUpdateExpense}
                 onProcessRowUpdateError={e => { console.error(e) }}
                 onRowSelectionModelChange={(ids) => {
                     const selectedIDs = new Set(ids);
-                    const selected = filteredExpenses.filter((row) =>
+                    const selected = monthlyExpenses.filter((row) =>
                         selectedIDs.has(row._id.toString()));
                     setSelectedItems(selected);
                 }}
